@@ -1,0 +1,91 @@
+# UPF power intent file for rsa_top.
+# This file must be combined with the file rsa_top.sv.
+
+# Define component scope for subsequent UPF-commands:
+set_design_top rsa_top
+set_scope .
+
+# Create PD_top domain: all the elements of rsa_top
+# are included into PD_top:
+create_power_domain PD_top \
+    -include_scope
+
+# Create PD_sw domain and move mod_exp_0 into PD_sw:
+create_power_domain PD_sw \
+    -elements {mod_exp_0}
+
+# Create supply ports:
+create_supply_port VDD
+create_supply_port GND
+
+# Create supply nets:
+create_supply_net vdd_n \
+    -domain PD_top
+create_supply_net gnd_n \
+    -domain PD_top
+
+# Connect supply nets to corresponding supply ports:
+connect_supply_net vdd_n \
+    -ports VDD
+connect_supply_net gnd_n \
+    -ports GND
+
+# Grouping power nets into set pwr_ss:
+create_supply_set pwr_ss \
+    -function {power vdd_n} \
+    -function {ground gnd_n}
+# Assigning set pwr_ss as the main set of PD_top:
+associate_supply_set pwr_ss \
+    -handle PD_top.primary
+
+# Creating power supply set to connect it to PD_sw:
+create_supply_net sw_vdd_n \
+    -domain PD_top
+create_supply_set sw_pwr_ss \
+    -function {power sw_vdd_n} \
+    -function {ground gnd_n}
+# Assigning set sw_pwr_ss as the main set of PD_sw:
+associate_supply_set sw_pwr_ss \
+    -handle PD_sw.primary
+
+# Creating power switch SW, that is controlled with the
+# verilog-signal w_sw_disable and acknowledges with w_sw_ack:
+create_power_switch SW \
+    -domain PD_sw \
+    -input_supply_port {SW_IN pwr_ss.power} \
+    -output_supply_port {SW_OUT sw_pwr_ss.power} \
+    -control_port {SW_DIS w_sw_disable} \
+    -on_state {on_state SW_IN {!SW_DIS}} \
+    -off_state {off_state {SW_DIS}} \
+    -ack_port {ACK w_sw_ack {!SW_DIS}} \
+    -ack_delay {ACK 105ns} \
+    -supply_set pwr_ss
+
+# Create strategy of adding isolation blocks for all outputs
+# with control signal w_iso_en:
+set_isolation pd_sw_iso \
+    -domain PD_sw \
+    -clamp_value {0} \
+    -isolation_signal w_iso_en \
+    -isolation_sense high \
+    -location automatic \
+    -applies_to outputs
+# Connecting power set pwr_ss to isolation blocks:
+associate_supply_set pwr_ss \
+    -handle PD_sw.default_isolation
+
+# Ports power states definition:
+add_port_state VDD \
+    -state {ON_1 1.0} \
+    -state {OFF_ST OFF}
+add_port_state SW/SW_OUT \
+    -state {ON_1 1.0} \
+    -state {OFF_ST OFF}
+add_port_state GND \
+    -state {ON_0 0}
+
+# Global power states table (for documentation and verification):
+create_pst RSA_PST               -supplies {VDD     SW/SW_OUT  GND }
+add_pst_state FULL_ON -pst RSA_PST  -state {ON_1    ON_1       ON_0}
+add_pst_state PART_ON -pst RSA_PST  -state {ON_1    OFF_ST     ON_0}
+add_pst_state FULL_OFF -pst RSA_PST -state {OFF_ST  OFF_ST     ON_0}

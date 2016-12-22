@@ -1,0 +1,315 @@
+
+`mspa_module
+
+(* upf_obj_path = "/rsa_top_tb/dut/VDD", upf_obj_type =  "PORT"  *)
+`line 18 "./src/rsa_power_intent.upf" 1
+module mspa0_qspacov_VDD (
+	`line 18 "./src/rsa_power_intent.upf" 1
+	VDD
+);
+	import UPF::*;
+	`line 18 "./src/rsa_power_intent.upf" 1
+	input  supply_net_type VDD;
+	`line 1 "nofile" 1
+	typedef enum {undefined,ON_1,OFF_ST} VDD_state_enum;
+	`line 18 "./src/rsa_power_intent.upf" 1
+	typedef struct {VDD_state_enum state_var; string state;}VDD_port_state_type;
+	`line 18 "./src/rsa_power_intent.upf" 1
+	VDD_port_state_type VDD_port_state_info = '{undefined, "undefined"};
+	reg VDD_clk = 1'b0;
+	reg VDD_isUndefined;
+
+import mspa_pack::*;
+
+	/*Behavioral code for port fsm */
+	always @(posedge VDD_clk)
+	begin
+		case(VDD_port_state_info.state_var)
+			default :
+			begin
+				VDD_isUndefined = 1;
+				VDD_port_state_info.state = "";
+				if((VDD.state == UPF::FULL_ON)&&(VDD.voltage==1000000))
+				begin
+					`line 80 "./src/rsa_power_intent.upf" 1
+					VDD_port_state_info.state_var = ON_1;
+					VDD_port_state_info.state = {VDD_port_state_info.state,VDD_isUndefined?"":",","ON_1"};
+					VDD_isUndefined = 0;
+					mspa_VDD_stateVar_1 = VDD_port_state_info.state;
+				end
+				if(VDD.state == UPF::OFF)
+				begin
+					`line 80 "./src/rsa_power_intent.upf" 1
+					VDD_port_state_info.state_var = OFF_ST;
+					VDD_port_state_info.state = {VDD_port_state_info.state,VDD_isUndefined?"":",","OFF_ST"};
+					VDD_isUndefined = 0;
+					mspa_VDD_stateVar_1 = VDD_port_state_info.state;
+				end
+				if(VDD_isUndefined == 1)
+				begin
+					`line 18 "./src/rsa_power_intent.upf" 1
+					VDD_port_state_info.state_var = undefined;
+					VDD_port_state_info.state = {VDD_port_state_info.state,VDD_isUndefined?"":",","undefined"};
+					VDD_isUndefined = 1;
+					mspa_VDD_stateVar_1 = VDD_port_state_info.state;
+				end
+			end
+		endcase
+		VDD_clk=1'b0;
+	end
+
+	/*Dummy clock posedge generation*/
+	always @(VDD)
+		VDD_clk = 1'b1;
+
+
+	/*Illegal port/pst state reached check.*/
+	(*UPF_PA_OBJ = "TRUE"*) always @( VDD_clk )
+				illegal_pstate_reached: (*UPF_PA_OBJ = "TRUE"*) assert ( VDD_isUndefined !== 1'b1 ) else $pa_messagelog( "%:S (vsim-%:I) %:C: Time: %s, Port 'VDD' reached an undefined state.\n{VDD = (undefined : %f V)} \nFile: %:F, Line: %0d, Port state:%:R", $pa_get_svrt("Error","8933","UNDEFINED"), "8933", "MSPA_UPF_ILLEGAL_STATE_REACHED",$pa_pptime, mspa_int_to_real_volt(VDD.voltage), "./src/rsa_power_intent.upf", 18, "UNDEFINED");
+
+endmodule /* PORT FSM */
+
+(* upf_obj_path = "/rsa_top_tb/dut/SW/SW_OUT", upf_obj_type =  "PORT"  *)
+`line 62 "./src/rsa_power_intent.upf" 1
+module mspa1_qspacov_SW_OUT (
+	`line 62 "./src/rsa_power_intent.upf" 1
+	SW_OUT
+);
+	import UPF::*;
+	`line 62 "./src/rsa_power_intent.upf" 1
+	input  supply_net_type SW_OUT;
+	`line 1 "nofile" 1
+	typedef enum {undefined,ON_1,OFF_ST} SW_OUT_state_enum;
+	`line 62 "./src/rsa_power_intent.upf" 1
+	typedef struct {SW_OUT_state_enum state_var; string state;}SW_OUT_port_state_type;
+	`line 62 "./src/rsa_power_intent.upf" 1
+	SW_OUT_port_state_type SW_OUT_port_state_info = '{undefined, "undefined"};
+	reg SW_OUT_clk = 1'b0;
+	reg SW_OUT_isUndefined;
+
+import mspa_pack::*;
+
+	/*Behavioral code for port fsm */
+	always @(posedge SW_OUT_clk)
+	begin
+		case(SW_OUT_port_state_info.state_var)
+			default :
+			begin
+				SW_OUT_isUndefined = 1;
+				SW_OUT_port_state_info.state = "";
+				if((SW_OUT.state == UPF::FULL_ON)&&(SW_OUT.voltage==1000000))
+				begin
+					`line 83 "./src/rsa_power_intent.upf" 1
+					SW_OUT_port_state_info.state_var = ON_1;
+					SW_OUT_port_state_info.state = {SW_OUT_port_state_info.state,SW_OUT_isUndefined?"":",","ON_1"};
+					SW_OUT_isUndefined = 0;
+					mspa_SW_OUT_stateVar_2 = SW_OUT_port_state_info.state;
+				end
+				if(SW_OUT.state == UPF::OFF)
+				begin
+					`line 83 "./src/rsa_power_intent.upf" 1
+					SW_OUT_port_state_info.state_var = OFF_ST;
+					SW_OUT_port_state_info.state = {SW_OUT_port_state_info.state,SW_OUT_isUndefined?"":",","OFF_ST"};
+					SW_OUT_isUndefined = 0;
+					mspa_SW_OUT_stateVar_2 = SW_OUT_port_state_info.state;
+				end
+				if(SW_OUT_isUndefined == 1)
+				begin
+					`line 62 "./src/rsa_power_intent.upf" 1
+					SW_OUT_port_state_info.state_var = undefined;
+					SW_OUT_port_state_info.state = {SW_OUT_port_state_info.state,SW_OUT_isUndefined?"":",","undefined"};
+					SW_OUT_isUndefined = 1;
+					mspa_SW_OUT_stateVar_2 = SW_OUT_port_state_info.state;
+				end
+			end
+		endcase
+		SW_OUT_clk=1'b0;
+	end
+
+	/*Dummy clock posedge generation*/
+	always @(SW_OUT)
+		SW_OUT_clk = 1'b1;
+
+
+	/*Illegal port/pst state reached check.*/
+	(*UPF_PA_OBJ = "TRUE"*) always @( SW_OUT_clk )
+				illegal_pstate_reached: (*UPF_PA_OBJ = "TRUE"*) assert ( SW_OUT_isUndefined !== 1'b1 ) else $pa_messagelog( "%:S (vsim-%:I) %:C: Time: %s, Port 'SW_OUT' reached an undefined state.\n{SW_OUT = (undefined : %f V)} \nFile: %:F, Line: %0d, Port state:%:R", $pa_get_svrt("Error","8933","UNDEFINED"), "8933", "MSPA_UPF_ILLEGAL_STATE_REACHED",$pa_pptime, mspa_int_to_real_volt(SW_OUT.voltage), "./src/rsa_power_intent.upf", 62, "UNDEFINED");
+
+endmodule /* PORT FSM */
+
+(* upf_obj_path = "/rsa_top_tb/dut/GND", upf_obj_type =  "PORT"  *)
+`line 19 "./src/rsa_power_intent.upf" 1
+module mspa2_qspacov_GND (
+	`line 19 "./src/rsa_power_intent.upf" 1
+	GND
+);
+	import UPF::*;
+	`line 19 "./src/rsa_power_intent.upf" 1
+	input  supply_net_type GND;
+	`line 1 "nofile" 1
+	typedef enum {undefined,ON_0} GND_state_enum;
+	`line 19 "./src/rsa_power_intent.upf" 1
+	typedef struct {GND_state_enum state_var; string state;}GND_port_state_type;
+	`line 19 "./src/rsa_power_intent.upf" 1
+	GND_port_state_type GND_port_state_info = '{undefined, "undefined"};
+	reg GND_clk = 1'b0;
+	reg GND_isUndefined;
+
+import mspa_pack::*;
+
+	/*Behavioral code for port fsm */
+	always @(posedge GND_clk)
+	begin
+		case(GND_port_state_info.state_var)
+			default :
+			begin
+				GND_isUndefined = 1;
+				GND_port_state_info.state = "";
+				if((GND.state == UPF::FULL_ON)&&(GND.voltage==0))
+				begin
+					`line 85 "./src/rsa_power_intent.upf" 1
+					GND_port_state_info.state_var = ON_0;
+					GND_port_state_info.state = {GND_port_state_info.state,GND_isUndefined?"":",","ON_0"};
+					GND_isUndefined = 0;
+					mspa_GND_stateVar_3 = GND_port_state_info.state;
+				end
+				if(GND_isUndefined == 1)
+				begin
+					`line 19 "./src/rsa_power_intent.upf" 1
+					GND_port_state_info.state_var = undefined;
+					GND_port_state_info.state = {GND_port_state_info.state,GND_isUndefined?"":",","undefined"};
+					GND_isUndefined = 1;
+					mspa_GND_stateVar_3 = GND_port_state_info.state;
+				end
+			end
+		endcase
+		GND_clk=1'b0;
+	end
+
+	/*Dummy clock posedge generation*/
+	always @(GND)
+		GND_clk = 1'b1;
+
+
+	/*Illegal port/pst state reached check.*/
+	(*UPF_PA_OBJ = "TRUE"*) always @( GND_clk )
+				illegal_pstate_reached: (*UPF_PA_OBJ = "TRUE"*) assert ( GND_isUndefined !== 1'b1 ) else $pa_messagelog( "%:S (vsim-%:I) %:C: Time: %s, Port 'GND' reached an undefined state.\n{GND = (undefined : %f V)} \nFile: %:F, Line: %0d, Port state:%:R", $pa_get_svrt("Error","8933","UNDEFINED"), "8933", "MSPA_UPF_ILLEGAL_STATE_REACHED",$pa_pptime, mspa_int_to_real_volt(GND.voltage), "./src/rsa_power_intent.upf", 19, "UNDEFINED");
+
+endmodule /* PORT FSM */
+
+(* upf_obj_path = "/rsa_top_tb/dut/RSA_PST", upf_obj_type =  "PST" , Pst_header0 = {"RSA_PST", "", "/rsa_top_tb/dut/pa_coverageinfo/RSA_PST/RSA_PST_pst_state_info.state_var"}, header1 = {"VDD", "", "/rsa_top_tb/dut/pa_coverageinfo/VDD/VDD_port_state_info.state_var" }, header2 = {"SW/SW_OUT", "", "/rsa_top_tb/dut/pa_coverageinfo/SW/SW_OUT/SW_OUT_port_state_info.state_var" }, header3 = {"GND", "", "/rsa_top_tb/dut/pa_coverageinfo/GND/GND_port_state_info.state_var" }
+, row0 = {"FULL_ON", "ON_1", "ON_1", "ON_0"}, row1 = {"PART_ON", "ON_1", "OFF_ST", "ON_0"}, row2 = {"FULL_OFF", "OFF_ST", "OFF_ST", "ON_0"}, row3 = {"undefined", "undefined", "undefined", "undefined"} *)
+`line 88 "./src/rsa_power_intent.upf" 1
+module mspa3_qspacov_RSA_PST(
+`protected
+
+    MTI!#\-3I$z_iVCroAwU\aY1$vA5nlX~Ye#X~NYZZV7mB+_n7YBUQx\ZO[{<zL^G=-r=^'=$zR[G
+    R_Y)*dY<x<YnmQpX,i*3Jn*#]37!v+Eu\5@UIK)1c3G~>^D"psx_e7p^yE{{A5az[n<UD1_XEG#'
+    BBulnE7#]#'z$vAf7k*77CT@+$]
+`endprotected
+);
+	import UPF::*;
+`protected
+
+    MTI!#s=kp11aC+\7-ZXODz_-l%K\J_aXZr_Te[MHxS""FdkN=#BW}-YX=KAQS>r_W^a3UqZx;nwC
+    wO,xWz2*UuixA-SBe<jG[BD7BQX=~>1C1=!R[tluO{]Woz[lRJ_wETal;n'3+jDBwrJ8wY*B|GD!
+    2l{@+pjC;Gn1+H]G<xaHVUTsk_}>'|^na*=Jl-wz-vaA-pe2AR"$cCTeX,V$
+`endprotected
+	`line 88 "./src/rsa_power_intent.upf" 1
+	typedef enum {undefined, FULL_ON, PART_ON, FULL_OFF} RSA_PST_state_enum;
+	`line 88 "./src/rsa_power_intent.upf" 1
+	typedef struct {RSA_PST_state_enum state_var; string state;}RSA_PST_pst_state_type;
+	`line 88 "./src/rsa_power_intent.upf" 1
+	RSA_PST_pst_state_type RSA_PST_pst_state_info = '{undefined, "undefined"};
+	reg RSA_PST_clk = 1'b0;
+	reg RSA_PST_isUndefined;
+
+
+	/*Behavioral code for pst fsm */
+	always @(posedge RSA_PST_clk)
+	begin
+		case(RSA_PST_pst_state_info.state_var)
+			default :
+			begin
+				RSA_PST_isUndefined = 1;
+				RSA_PST_pst_state_info.state = "";
+				if(
+					((VDD.state == UPF::FULL_ON)&&(VDD.voltage==1000000))
+					&& ((SW_OUT.state == UPF::FULL_ON)&&(SW_OUT.voltage==1000000))
+					&& ((GND.state == UPF::FULL_ON)&&(GND.voltage==0)))
+				begin
+					`line 89 "./src/rsa_power_intent.upf" 1
+					RSA_PST_pst_state_info.state_var = FULL_ON;
+					RSA_PST_pst_state_info.state = {RSA_PST_pst_state_info.state,RSA_PST_isUndefined?"":",","FULL_ON"};
+					RSA_PST_isUndefined = 0;
+				end
+				if(
+					((VDD.state == UPF::FULL_ON)&&(VDD.voltage==1000000))
+					&& (SW_OUT.state == UPF::OFF)
+					&& ((GND.state == UPF::FULL_ON)&&(GND.voltage==0)))
+				begin
+					`line 90 "./src/rsa_power_intent.upf" 1
+					RSA_PST_pst_state_info.state_var = PART_ON;
+					RSA_PST_pst_state_info.state = {RSA_PST_pst_state_info.state,RSA_PST_isUndefined?"":",","PART_ON"};
+					RSA_PST_isUndefined = 0;
+				end
+				if(
+					(VDD.state == UPF::OFF)
+					&& (SW_OUT.state == UPF::OFF)
+					&& ((GND.state == UPF::FULL_ON)&&(GND.voltage==0)))
+				begin
+					`line 91 "./src/rsa_power_intent.upf" 1
+					RSA_PST_pst_state_info.state_var = FULL_OFF;
+					RSA_PST_pst_state_info.state = {RSA_PST_pst_state_info.state,RSA_PST_isUndefined?"":",","FULL_OFF"};
+					RSA_PST_isUndefined = 0;
+				end
+				if(
+					RSA_PST_isUndefined==1)
+				begin
+					`line 88 "./src/rsa_power_intent.upf" 1
+					RSA_PST_pst_state_info.state_var = undefined;
+					RSA_PST_pst_state_info.state ={RSA_PST_pst_state_info.state,RSA_PST_isUndefined?"":",","undefined"};
+					RSA_PST_isUndefined = 1;
+				end
+			end
+		endcase
+		RSA_PST_clk=1'b0;
+	end
+
+	/*Dummy clock posedge generation*/
+	always @( VDD, SW_OUT, GND )
+		RSA_PST_clk = 1'b1;
+
+
+import mspa_pack::*;
+	/*Illegal port/pst state reached check.*/
+	(*UPF_PA_OBJ = "TRUE"*) always @( RSA_PST_clk )
+				illegal_pstate_reached: (*UPF_PA_OBJ = "TRUE"*) assert ( RSA_PST_isUndefined !== 1'b1 ) else $pa_messagelog( "%:S (vsim-%:I) %:C: Time: %s, PST 'RSA_PST' reached an undefined state.\n{VDD = (%s : %f V), SW_OUT = (%s : %f V), GND = (%s : %f V)} \nFile: %:F, Line: %0d, PST state:%:R", $pa_get_svrt("Error","8933","UNDEFINED"), "8933", "MSPA_UPF_ILLEGAL_STATE_REACHED",$pa_pptime, mspa_VDD_stateVar_1, mspa_int_to_real_volt(VDD.voltage),mspa_SW_OUT_stateVar_2, mspa_int_to_real_volt(SW_OUT.voltage),mspa_GND_stateVar_3, mspa_int_to_real_volt(GND.voltage), "./src/rsa_power_intent.upf", 88, "UNDEFINED");
+
+endmodule /* PST FSM */
+
+/* Switch module for scope /rsa_top_tb/dut */
+module mspa4_qspacov_SW(); 
+	`line 62 "./src/rsa_power_intent.upf" 1
+	mspa1_qspacov_SW_OUT SW_OUT (
+		.SW_OUT($root.mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.mspa30_SW.SW_OUT)
+		);
+endmodule
+
+/* module for scope /rsa_top_tb/dut */
+module mspa5_qspacov_dut();
+`line 18 "./src/rsa_power_intent.upf" 1
+mspa0_qspacov_VDD VDD ( 	.VDD($root.mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.VDD) 	);
+`line 62 "./src/rsa_power_intent.upf" 1
+mspa4_qspacov_SW SW();
+`line 19 "./src/rsa_power_intent.upf" 1
+mspa2_qspacov_GND GND ( 	.GND($root.mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.GND) 	);
+`line 88 "./src/rsa_power_intent.upf" 1
+mspa3_qspacov_RSA_PST RSA_PST ( 	.VDD($root.mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.VDD) 	, .SW_OUT($root.mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.mspa30_SW.SW_OUT) 	, .GND($root.mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.GND) );
+endmodule
+
+
+module mspa_fsm();
+	bind rsa_top_tb.dut mspa5_qspacov_dut pa_coverageinfo();
+
+endmodule/*End of top level FSM module*/

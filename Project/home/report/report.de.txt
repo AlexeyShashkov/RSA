@@ -1,0 +1,184 @@
+------------------------------------------------------------
+----- QuestaSim Power Aware Design Element Report File -----
+------------------------------------------------------------
+ -- QuestaSim Version :    10.2c 2013.07
+-- Generated on     :     Sat Feb 20 00:17:20 2016
+------------------------------------------------------------
+-- Format:
+--   Power Domain / Scope Mapping:
+--      <domain name>[(PD_ID)] : {<path #>} = scope <full path to element> [<>]
+--           specifies scope that is part of power domain <domain name>
+--           <> identifies a scope at the power domain boundary
+--           SIM identifies a scope as simulation only
+--           PD_ID : Power Domain ID assigned by the tool if another power domain
+--                   of same name is present in a different scope.
+--                   The PD_ID information is present in power architecture report.
+--   Power Domain Element Identification:
+--      <domain name>[(PD_ID)] : {<path #>}/<element name> [<element type>]
+--           specifies design element in power domain <domain name>
+--           <element type> is one of
+--             NPM_LA       => Non Retention Latch
+--             NPM_FF       => Non-retention Flip-Flop
+--             MEM          => Non-retention Memory
+--             UDP_LA       => Non-retention UDP latch
+--             UDP_FF       => Non-retention UDP Flip-Flop
+--             R            => Retention element
+--             <none>       => Combinational logic
+------------------------------------------------------------
+
+PD_top: {Path1} = scope /rsa_top_tb/dut <>
+PD_top: {Path2} = scope /rsa_top_tb/dut/rsa_power_control_0
+PD_sw: {Path3} = scope /rsa_top_tb/dut/mod_exp_0 <>
+PD_sw: {Path4} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/counter_0
+PD_sw: {Path5} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0/csa_1
+PD_sw: {Path6} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0
+PD_sw: {Path7} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p
+PD_sw: {Path8} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/counter_to_t_sub_1_0
+PD_sw: {Path9} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0
+PD_sw: {Path10} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0/csa_2
+PD_sw: {Path11} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0
+PD_sw: {Path12} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/bit_shift_adder_0
+PD_sw: {Path13} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/bit_shift_adder_0
+PD_sw: {Path14} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0/csa_2
+PD_sw: {Path15} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0
+PD_sw: {Path16} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/bit_comp_0
+PD_sw: {Path17} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/counter_0
+PD_sw: {Path18} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0
+PD_sw: {Path19} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0/csa_0
+PD_sw: {Path20} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/bit_shift_adder_final
+PD_sw: {Path21} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0/csa_0
+PD_sw: {Path22} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0/csa_1
+PD_sw: {Path23} = scope /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r
+
+PD_top: {Path1}/clk_gated 
+PD_top: {Path1}/w2_done 
+PD_top: {Path1}/w2_m 
+PD_top: {Path1}/w2_ready 
+PD_top: {Path1}/clk_enable_latch NPM_LA
+PD_top: {Path1}/d2_w_sw_ack NPM_FF
+PD_top: {Path1}/d1_w_sw_ack NPM_FF
+PD_top: {Path1}/power_enabled NPM_FF
+PD_top: {Path2}/next_state 
+PD_top: {Path2}/w_mode_change_ack 
+PD_top: {Path2}/w_reset_on_enable 
+PD_top: {Path2}/w_iso_en 
+PD_top: {Path2}/w_outputs_force_zero 
+PD_top: {Path2}/w_sw_disable 
+PD_top: {Path2}/w_clk_disable 
+PD_top: {Path2}/present_state[31:0] NPM_FF
+PD_top: {Path2}/r_clk_disable NPM_FF
+PD_top: {Path2}/r_reset_on_enable NPM_FF
+PD_top: {Path2}/r_sw_disable NPM_FF
+PD_top: {Path2}/r_mode_change_ack NPM_FF
+PD_top: {Path2}/r_iso_en NPM_FF
+PD_top: {Path2}/r_outputs_force_zero NPM_FF
+PD_sw: {Path3}/w0_done 
+PD_sw: {Path3}/w0_m 
+PD_sw: {Path3}/w0_ready 
+PD_sw: {Path4}/r_active NPM_FF
+PD_sw: {Path4}/cnt[3:0] NPM_FF
+PD_sw: {Path4}/r_ready_next NPM_FF
+PD_sw: {Path4}/r_ready_next_prev NPM_FF
+PD_sw: {Path4}/r_ready_next_3prev NPM_FF
+PD_sw: {Path5}/s 
+PD_sw: {Path5}/c 
+PD_sw: {Path6}/w_start_p 
+PD_sw: {Path6}/w_start_r 
+PD_sw: {Path6}/w_commutation_config 
+PD_sw: {Path6}/w_inc 
+PD_sw: {Path6}/w_start_final_addition 
+PD_sw: {Path6}/w_set_ready 
+PD_sw: {Path6}/r_set_ready NPM_FF
+PD_sw: {Path6}/r_start_final_addition NPM_FF
+PD_sw: {Path6}/r_inc NPM_FF
+PD_sw: {Path6}/r_start_p NPM_FF
+PD_sw: {Path6}/r_start_r NPM_FF
+PD_sw: {Path6}/r_commutation_config[1:0] NPM_FF
+PD_sw: {Path6}/r_s0 NPM_FF
+PD_sw: {Path6}/r_s6 NPM_FF
+PD_sw: {Path6}/r_s5 NPM_FF
+PD_sw: {Path6}/r_s4 NPM_FF
+PD_sw: {Path6}/r_s3 NPM_FF
+PD_sw: {Path6}/r_s2 NPM_FF
+PD_sw: {Path6}/r_s1 NPM_FF
+PD_sw: {Path7}/b1_ai 
+PD_sw: {Path7}/b0_ai 
+PD_sw: {Path7}/q_i 
+PD_sw: {Path7}/n_qi 
+PD_sw: {Path7}/r_n[10:0] NPM_FF
+PD_sw: {Path7}/r_b1[10:0] NPM_FF
+PD_sw: {Path7}/r_b0[10:0] NPM_FF
+PD_sw: {Path8}/cnt[3:0] NPM_FF
+PD_sw: {Path9}/csa_1_x4 
+PD_sw: {Path9}/csa_2_x5 
+PD_sw: {Path9}/r_s1[10:0] NPM_FF
+PD_sw: {Path9}/r_s0[10:0] NPM_FF
+PD_sw: {Path10}/s 
+PD_sw: {Path10}/c 
+PD_sw: {Path11}/b1_p 
+PD_sw: {Path11}/b0_p 
+PD_sw: {Path11}/a1_p 
+PD_sw: {Path11}/a0_p 
+PD_sw: {Path11}/b1_r 
+PD_sw: {Path11}/b0_r 
+PD_sw: {Path11}/a1_r 
+PD_sw: {Path11}/a0_r 
+PD_sw: {Path11}/r_ready NPM_FF
+PD_sw: {Path11}/r_n[8:0] NPM_FF
+PD_sw: {Path11}/r_r2_mod_n[8:0] NPM_FF
+PD_sw: {Path11}/r_t_sub_1[3:0] NPM_FF
+PD_sw: {Path11}/r_c[8:0] NPM_FF
+PD_sw: {Path11}/r_d[8:0] NPM_FF
+PD_sw: {Path11}/d2_start_final_addition NPM_FF
+PD_sw: {Path11}/d1_start_final_addition NPM_FF
+PD_sw: {Path11}/r_n_prev[8:0] NPM_FF
+PD_sw: {Path12}/fa 
+PD_sw: {Path12}/r_c NPM_FF
+PD_sw: {Path12}/r_a1[10:0] NPM_FF
+PD_sw: {Path12}/r_a0[10:0] NPM_FF
+PD_sw: {Path13}/fa 
+PD_sw: {Path13}/r_c NPM_FF
+PD_sw: {Path13}/r_a1[10:0] NPM_FF
+PD_sw: {Path13}/r_a0[10:0] NPM_FF
+PD_sw: {Path14}/s 
+PD_sw: {Path14}/c 
+PD_sw: {Path15}/m_out 
+PD_sw: {Path15}/cnt_addition_continue NPM_FF
+PD_sw: {Path15}/cnt_addition[3:0] NPM_FF
+PD_sw: {Path15}/final_sum[8:0] NPM_FF
+PD_sw: {Path15}/addition_done NPM_FF
+PD_sw: {Path15}/r_done NPM_FF
+PD_sw: {Path15}/r_m_out[8:0] NPM_FF
+PD_sw: {Path16}/bits_are_equal 
+PD_sw: {Path16}/r_in1[8:0] NPM_FF
+PD_sw: {Path16}/r_in0[8:0] NPM_FF
+PD_sw: {Path16}/r_done_cmp NPM_FF
+PD_sw: {Path16}/r_are_equal NPM_FF
+PD_sw: {Path16}/is_working NPM_FF
+PD_sw: {Path16}/cnt[3:0] NPM_FF
+PD_sw: {Path17}/r_active NPM_FF
+PD_sw: {Path17}/cnt[3:0] NPM_FF
+PD_sw: {Path17}/r_ready_next NPM_FF
+PD_sw: {Path17}/r_ready_next_prev NPM_FF
+PD_sw: {Path17}/r_ready_next_3prev NPM_FF
+PD_sw: {Path18}/csa_1_x4 
+PD_sw: {Path18}/csa_2_x5 
+PD_sw: {Path18}/r_s1[10:0] NPM_FF
+PD_sw: {Path18}/r_s0[10:0] NPM_FF
+PD_sw: {Path19}/s 
+PD_sw: {Path19}/c 
+PD_sw: {Path20}/fa 
+PD_sw: {Path20}/r_c NPM_FF
+PD_sw: {Path20}/r_a1[8:0] NPM_FF
+PD_sw: {Path20}/r_a0[8:0] NPM_FF
+PD_sw: {Path21}/s 
+PD_sw: {Path21}/c 
+PD_sw: {Path22}/s 
+PD_sw: {Path22}/c 
+PD_sw: {Path23}/b1_ai 
+PD_sw: {Path23}/b0_ai 
+PD_sw: {Path23}/q_i 
+PD_sw: {Path23}/n_qi 
+PD_sw: {Path23}/r_n[10:0] NPM_FF
+PD_sw: {Path23}/r_b1[10:0] NPM_FF
+PD_sw: {Path23}/r_b0[10:0] NPM_FF

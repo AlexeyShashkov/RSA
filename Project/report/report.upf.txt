@@ -1,0 +1,82 @@
+--------------------------------------------------
+----- QuestaSim Power Aware UPF Report File  -----
+--------------------------------------------------
+Power Domain: PD_sw, File: ./src/rsa_top_power_intent.upf(15).
+	Creation Scope: /rsa_top_tb/dut
+	Primary Supplies:
+		power  : /rsa_top_tb/dut/sw_vdd_n
+		ground : /rsa_top_tb/dut/gnd_n
+	Supply Set handles:
+		1. primary: /rsa_top_tb/dut/sw_pwr_ss
+			Functions:
+				1. power     : /rsa_top_tb/dut/sw_vdd_n
+				2. ground    : /rsa_top_tb/dut/gnd_n
+		2. default_isolation: /rsa_top_tb/dut/pwr_ss
+			Functions:
+				1. power     : /rsa_top_tb/dut/vdd_n
+				2. ground    : /rsa_top_tb/dut/gnd_n
+
+	Power Switch: SW, File: ./src/rsa_top_power_intent.upf(62).
+		Supply Set handles:
+			1. supply: /rsa_top_tb/dut/pwr_ss
+				Functions:
+					1. power     : /rsa_top_tb/dut/vdd_n
+					2. ground    : /rsa_top_tb/dut/gnd_n
+		Output Supply port:
+			SW_OUT(/rsa_top_tb/dut/sw_vdd_n)
+		Input Supply ports:
+			1. SW_IN(/rsa_top_tb/dut/vdd_n)
+		Control Ports:
+			1. SW_DIS(/rsa_top_tb/dut/w_sw_disable)
+		Switch States:
+			1. on_state(FULL_ON) : (!SW_DIS)
+			2. off_state(OFF) : (SW_DIS)
+	Isolation Strategy: pd_sw_iso, File: ./src/rsa_top_power_intent.upf(72).
+		Isolation Supplies:
+			power  : /rsa_top_tb/dut/vdd_n
+			ground : /rsa_top_tb/dut/gnd_n
+		Isolation Control (/rsa_top_tb/dut/w_iso_en), Isolation Sense (HIGH), Clamp Value (0), Location (automatic)
+		Signals with default isolation cells:
+			1. Signal : /rsa_top_tb/dut/mod_exp_0/done
+			2. Signal : /rsa_top_tb/dut/mod_exp_0/m[8]
+			3. Signal : /rsa_top_tb/dut/mod_exp_0/m[7]
+			4. Signal : /rsa_top_tb/dut/mod_exp_0/m[6]
+			5. Signal : /rsa_top_tb/dut/mod_exp_0/m[5]
+			6. Signal : /rsa_top_tb/dut/mod_exp_0/m[4]
+			7. Signal : /rsa_top_tb/dut/mod_exp_0/m[3]
+			8. Signal : /rsa_top_tb/dut/mod_exp_0/m[2]
+			9. Signal : /rsa_top_tb/dut/mod_exp_0/m[1]
+			10. Signal : /rsa_top_tb/dut/mod_exp_0/m[0]
+			11. Signal : /rsa_top_tb/dut/mod_exp_0/ready
+
+-------------------------------------------------
+Power Domain: PD_top, File: ./src/rsa_top_power_intent.upf(11).
+	Creation Scope: /rsa_top_tb/dut
+	Primary Supplies:
+		power  : /rsa_top_tb/dut/vdd_n
+		ground : /rsa_top_tb/dut/gnd_n
+	Supply Set handles:
+		1. primary: /rsa_top_tb/dut/pwr_ss
+			Functions:
+				1. power     : /rsa_top_tb/dut/vdd_n
+				2. ground    : /rsa_top_tb/dut/gnd_n
+
+
+-------------------------------------------------
+Pst RSA_PST, File:./src/rsa_top_power_intent.upf(89).
+	Scope => /rsa_top_tb/dut
+	Header ==>                                 : VDD    SW/SW_OUT GND  
+	FULL_ON  ./src/rsa_top_power_intent.upf(90): ON_1   ON_1      ON_0 
+	PART_ON  ./src/rsa_top_power_intent.upf(91): ON_1   OFF_ST    ON_0 
+	FULL_OFF ./src/rsa_top_power_intent.upf(92): OFF_ST OFF_ST    ON_0 
+
+	List of possible states on:
+		VDD [ source supply port: VDD, File:./src/rsa_top_power_intent.upf(18)]
+			1. ON_1  : 1.00
+			2. OFF_ST: OFF
+		SW_OUT [ source supply port: SW_OUT, File:./src/rsa_top_power_intent.upf(62)]
+			1. ON_1  : 1.00
+			2. OFF_ST: OFF
+		GND [ source supply port: GND, File:./src/rsa_top_power_intent.upf(19)]
+			1. ON_0: 0.00
+-------------------------------------------------

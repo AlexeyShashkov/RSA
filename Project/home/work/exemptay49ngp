@@ -1,0 +1,105 @@
+/* This package contains the definitions of the functions used in Power Aware Netlist file */
+package mspa_pack;
+
+import UPF::*;
+
+function bit is_same_root_supply_driver (input supply_net_type net1, input supply_net_type net2);       
+    if (net1.voltage == net2.voltage)                                      
+        return 1'b1;                                                       
+    else                                                                   
+        return 1'b0;                                                       
+endfunction                                                                
+                                                                           
+	/******************************************************* 
+	** Declarations corresponding to Power Control Signals **
+	** triggered by UPF hierarchy.                         **
+	 *******************************************************/
+	reg paopt_t0cond;
+	reg SW_DIS_mspa30_SW_chk;
+	reg mspa31_pd_sw_iso_ss;
+	reg mspa4_PWR_SW;
+	reg mspa3_pd_sw_iso_ISO_ENABLE;
+	reg mspa2_pd_sw_iso_ISO_PWR;
+	reg mspa1_PD_sw_DOMAIN_PWR;
+	reg mspa0_PD_top_DOMAIN_PWR;
+	/****************** End PCS Declarations ***************/
+	// MSPA Function to get Absolute value 
+	function automatic int mspa_abs( int x );  
+		mspa_abs = ( ( x >= 0 ) ? x : -x );
+	endfunction: mspa_abs  
+	// MSPA Function to convert int micro voltage to real voltage 
+	function automatic real mspa_int_to_real_volt( int x );  
+		real voltage;
+		voltage = $itor( x );
+		voltage = voltage / 1000000;
+		return voltage;
+	endfunction: mspa_int_to_real_volt  
+	reg mspa0_PD_top_DOMAIN_PWR_2 = 1'b1;
+	wire mspa0_PD_top_DOMAIN_PWR_2_wire;
+	reg mspa1_PD_sw_DOMAIN_PWR_1 = 1'b1;
+	wire mspa1_PD_sw_DOMAIN_PWR_1_wire;
+	supply_net_type vdd_n_mspaScope1_dut_chk;
+	supply_net_type gnd_n_mspaScope1_dut_chk;
+	supply_net_type sw_vdd_n_mspaScope1_dut_chk;
+	string mspa_GND_stateVar_3;
+	string mspa_SW_OUT_stateVar_2;
+	string mspa_VDD_stateVar_1;
+`protected
+
+    MTI!#aH3k>B?$KzxWT,<~=T5<S%[]H[|Q#p#|*~uxN&"\}73eQEu]iC[7piKL#}+Gxw~EK<a3^[#
+    Y@am*l#RWeva$&a'zJq[mv}'7xY~5]+}Fr5ise2\A_s=xFQ*wmw}T-FG~E'SFmw\,lk<=Ip-#^=B
+    $B_*H=ul?@7^58Y7
+`endprotected
+/********Types corresponding to Power power states**************/
+typedef struct packed { reg Active;power_state_simstate state_simstate;} ss_ps_type;
+typedef struct packed { reg Active;} pd_ps_type;
+/******************    End power state type dumping        ***************/
+/********Types corresponding to Supply Set Objects**************/
+import UPF::*;
+typedef struct packed { supply_net_type power ;supply_net_type ground ;} mspa6_pwr_ss_PS_mspa_obj_type;
+typedef struct packed { supply_net_type power ;supply_net_type ground ;} mspa5_sw_pwr_ss_PS_mspa_obj_type;
+/******************   End Supply Set Object Type   **************/
+	// MSPA Function to convert int to simstate 
+	function power_state_simstate mspa_int_to_simstate( int x );  
+	import UPF::*;
+	power_state_simstate simState;
+	if( x === 0 )
+		simState = NORMAL;
+	else if( x === 1 )
+		simState = CORRUPT;
+	else if( x === 2 )
+		simState = CORRUPT_ON_ACTIVITY;
+	else if( x === 3 )
+		simState = CORRUPT_STATE_ON_CHANGE;
+	else if( x === 4 )
+		simState = CORRUPT_STATE_ON_ACTIVITY;
+	return simState;
+	endfunction: mspa_int_to_simstate  
+/*Function for msg str for iepcoa/idpcoa*/
+import UPF::*;
+function string msg_str_func(power_state_simstate simState,int isIepCoa);
+if(simState == CORRUPT)
+	msg_str_func = isIepCoa ? "power is switched OFF" : "power shut OFF";
+else if(simState == CORRUPT_ON_ACTIVITY)
+	msg_str_func = isIepCoa ? "driving supply is in CORRUPT_ON_ACTIVITY simstate": "driving supply CORRUPT_ON_ACTIVITY simstate";
+else if(simState == CORRUPT_STATE_ON_ACTIVITY)
+	msg_str_func = isIepCoa ? "driving supply is in CORRUPT_STATE_ON_ACTIVITY simstate": "driving supply CORRUPT_STATE_ON_ACTIVITY simstate";
+else if(simState == CORRUPT_STATE_ON_CHANGE)
+	msg_str_func = isIepCoa ? "driving supply is in CORRUPT_STATE_ON_CHANGE simstate": "driving supply CORRUPT_STATE_ON_CHANGE simstate";
+endfunction
+
+typedef struct{
+	string sStrtgyName;
+	string sPdName;
+	string sFileName;
+	int iLine;
+} pd_handle;
+pd_handle pdInfoTable[integer];
+`protected
+
+    MTI!#Al!pxr-I5-\]EIC5?U[K~o~_1z,R_1zm}3A1$0zFV;,2p!=j~<U2n}AA5wnja<lkFFwTTVj
+    Vp2hIqICno\XW:{TXJL$!HlG#vr]nABCJ*iY~Grwe~B*i
+`endprotected
+string sPaPrefix;
+	bit [5:0]PA_CS;//Signal used for power up
+endpackage

@@ -1,0 +1,57 @@
+namespace eval PA {} ;
+quietly set vname [virtual signal -install "/rsa_top_tb/dut" "mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.GND" GND]
+quietly set PA::LookupTable($vname) "Supply Port" 
+quietly radix signal "/rsa_top_tb/dut/GND" decimal
+quietly radix signal "/rsa_top_tb/dut/GND.voltage" decimal
+quietly set vname [virtual signal -install "/rsa_top_tb/dut" "mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.VDD" VDD]
+quietly set PA::LookupTable($vname) "Supply Port" 
+quietly radix signal "/rsa_top_tb/dut/VDD" decimal
+quietly radix signal "/rsa_top_tb/dut/VDD.voltage" decimal
+quietly set vname [virtual signal -install "/rsa_top_tb/dut" "mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.sw_vdd_n" sw_vdd_n]
+quietly set PA::LookupTable($vname) "Supply Net" 
+quietly radix signal "/rsa_top_tb/dut/sw_vdd_n" decimal
+quietly radix signal "/rsa_top_tb/dut/sw_vdd_n.voltage" decimal
+quietly set vname [virtual signal -install "/rsa_top_tb/dut" "mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.gnd_n" gnd_n]
+quietly set PA::LookupTable($vname) "Supply Net" 
+quietly radix signal "/rsa_top_tb/dut/gnd_n" decimal
+quietly radix signal "/rsa_top_tb/dut/gnd_n.voltage" decimal
+quietly set vname [virtual signal -install "/rsa_top_tb/dut" "mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.vdd_n" vdd_n]
+quietly set PA::LookupTable($vname) "Supply Net" 
+quietly radix signal "/rsa_top_tb/dut/vdd_n" decimal
+quietly radix signal "/rsa_top_tb/dut/vdd_n.voltage" decimal
+	quietly set vname [virtual signal -install "/rsa_top_tb/dut" "mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.mspa5_sw_pwr_ss_PS_mspa_obj" sw_pwr_ss]
+	quietly set PA::LookupTable($vname) "Supply Set" 
+	quietly radix signal "/rsa_top_tb/dut/sw_pwr_ss" decimal
+	quietly set vname [virtual signal -install "/rsa_top_tb/dut" "mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.mspa6_pwr_ss_PS_mspa_obj" pwr_ss]
+	quietly set PA::LookupTable($vname) "Supply Set" 
+	quietly radix signal "/rsa_top_tb/dut/pwr_ss" decimal
+	quietly set vname [virtual signal -install "/rsa_top_tb/dut" "mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.mspa24_PD_top.PD_top_mspa_obj" PD_top]
+	quietly set PA::LookupTable($vname) "Power Domain" 
+	quietly radix signal "/rsa_top_tb/dut/PD_top" decimal
+	quietly set vname [virtual signal -install "/rsa_top_tb/dut" "mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.mspa26_PD_sw.PD_sw_mspa_obj" PD_sw]
+	quietly set PA::LookupTable($vname) "Power Domain" 
+	quietly radix signal "/rsa_top_tb/dut/PD_sw" decimal
+quietly virtual region "/rsa_top_tb/dut" "SW"
+quietly set vname "/rsa_top_tb/dut/SW"
+quietly set PA::LookupTable($vname) "Power Switch" 
+quietly set vname [virtual signal -install "/rsa_top_tb/dut/SW" "mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.mspa6_pwr_ss_PS_mspa_obj" supply]
+quietly set PA::LookupTable($vname) "Supply Set" 
+quietly radix signal "/rsa_top_tb/dut/SW/supply" decimal
+quietly set vname [virtual signal -install "/rsa_top_tb/dut/SW" "mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.mspa30_SW.PWR" PWR]
+quietly set PA::LookupTable($vname) "Supply Port" 
+quietly radix signal "/rsa_top_tb/dut/SW/PWR" decimal
+quietly radix signal "/rsa_top_tb/dut/SW/PWR.voltage" decimal
+quietly set vname [virtual signal -install "/rsa_top_tb/dut/SW" "mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.mspa30_SW.GND" GND]
+quietly set PA::LookupTable($vname) "Supply Port" 
+quietly radix signal "/rsa_top_tb/dut/SW/GND" decimal
+quietly radix signal "/rsa_top_tb/dut/SW/GND.voltage" decimal
+quietly set vname [virtual signal -install "/rsa_top_tb/dut/SW" "mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.mspa30_SW.SW_IN" SW_IN]
+quietly set PA::LookupTable($vname) "Supply Port" 
+quietly radix signal "/rsa_top_tb/dut/SW/SW_IN" decimal
+quietly radix signal "/rsa_top_tb/dut/SW/SW_IN.voltage" decimal
+quietly set vname [virtual signal -install "/rsa_top_tb/dut/SW" "mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.mspa30_SW.SW_OUT" SW_OUT]
+quietly set PA::LookupTable($vname) "Supply Port" 
+quietly radix signal "/rsa_top_tb/dut/SW/SW_OUT" decimal
+quietly radix signal "/rsa_top_tb/dut/SW/SW_OUT.voltage" decimal
+	quietly set vname [virtual signal -install "/rsa_top_tb/dut/SW" "mspa_top.mspa_upf_top.mspaScope3_rsa_top_tb.mspaScope1_dut.mspa30_SW.SW_DIS" SW_DIS]
+	quietly set PA::LookupTable($vname) "Control Port" 

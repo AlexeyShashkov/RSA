@@ -1,0 +1,12 @@
+P /rsa_top_tb/dut/PD_sw 1
+P /rsa_top_tb/dut/PD_top 2
+S GND 5
+S RSA_PST 6
+S SW 2
+S SW_OUT 4
+S VDD 3
+S pd_sw_iso 1
+F ./src/rsa_top_power_intent.upf 1
+T /rsa_top_tb/dut/mod_exp_0/done 2
+T /rsa_top_tb/dut/mod_exp_0/m 1
+T /rsa_top_tb/dut/mod_exp_0/ready 3

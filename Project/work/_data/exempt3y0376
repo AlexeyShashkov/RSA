@@ -1,0 +1,32 @@
+`line 1 "mspa_vopt.v" 1
+/***************************************************
+ *               PA-RTLSim Netlist                 *
+ ***************************************************/
+
+`mspa_module
+
+import mspa_pack::*;
+module mspa_top;
+parameter int pa_param = 0;
+parameter int pa_cov_param = 0;
+parameter int pa_time0param = 0;//dummy..to avoid vsim warning of param not found.
+initial begin
+sSignalNames[0] = "high_to_low";
+sSignalNames[1] = "low_to_high";
+sSignalNames[2] = "";
+sSignalNames[3] = "}";
+end
+logic mspa_chk_rst;
+logic mspa_chk_rst_sampled;
+initial
+begin
+	$pa_assertoff();
+	mspa_chk_rst = 0;
+	#0 mspa_chk_rst = 1;
+end
+assign mspa_chk_rst_sampled = $sampled(mspa_chk_rst);
+always @(mspa_chk_rst_sampled)
+	begin
+	if(mspa_chk_rst_sampled === 1'b1)
+	 $pa_asserton();
+end

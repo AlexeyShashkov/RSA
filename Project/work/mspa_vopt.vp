@@ -1,0 +1,2752 @@
+`line 1 "mspa_vopt.v" 1
+/***************************************************
+ *               PA-RTLSim Netlist                 *
+ ***************************************************/
+
+`mspa_module
+
+import mspa_pack::*;
+import UPF::*;
+module mspa_top;
+parameter int pa_param = 0;
+parameter int pa_cov_param = 0;
+parameter int pa_time0param = 0;//dummy..to avoid vsim warning of param not found.
+initial begin
+sSignalNames[0] = "high_to_low";
+sSignalNames[1] = "low_to_high";
+sSignalNames[2] = "";
+sSignalNames[3] = "}";
+end
+logic mspa_chk_rst;
+logic mspa_chk_rst_sampled;
+initial
+begin
+	$pa_assertoff();
+	mspa_chk_rst = 0;
+	#0 mspa_chk_rst = 1;
+end
+assign mspa_chk_rst_sampled = $sampled(mspa_chk_rst);
+always @(mspa_chk_rst_sampled)
+	begin
+	if(mspa_chk_rst_sampled === 1'b1)
+	 $pa_asserton();
+end
+initial
+begin
+#1 	$pa_cleanup_func();
+end
+initial sPaPrefix = "";
+initial begin
+		pdInfoTable[1].sPdName = "PD_sw";
+		pdInfoTable[1].sFileName = "./src/rsa_top_power_intent.upf";
+		pdInfoTable[1].iLine = 72;
+		pdInfoTable[1].sStrtgyName = "pd_sw_iso";
+		sSignalNames[4] = "/rsa_top_tb/dut/mod_exp_0/ready";
+		sSignalNames[5] = "/rsa_top_tb/dut/mod_exp_0/m";
+		sSignalNames[6] = "/rsa_top_tb/dut/mod_exp_0/done";
+end
+	upf_iso_cell_model_pwr inst0_upf_iso_cell_model_pwr (
+		 .ISO(mspa3_pd_sw_iso_ISO_ENABLE),
+		 .PWR(mspa2_pd_sw_iso_ISO_PWR)
+	 );
+initial begin
+end
+generate if(pa_param[0]) begin :PA_CS0
+	always @(posedge mspa1_PD_sw_DOMAIN_PWR_1)
+		PA_CS[0] = 1'b1;
+	always @(posedge PA_CS[0])
+		PA_CS[1] = 1'b1;
+	always @(posedge PA_CS[1]) begin
+		PA_CS[0] = 1'b0;
+		PA_CS[1] = 1'b0;
+	end
+end endgenerate
+generate if(pa_param[0]) begin :PA_CS2
+	always @(posedge mspa0_PD_top_DOMAIN_PWR_2)
+		PA_CS[2] = 1'b1;
+	always @(posedge PA_CS[2])
+		PA_CS[3] = 1'b1;
+	always @(posedge PA_CS[3]) begin
+		PA_CS[2] = 1'b0;
+		PA_CS[3] = 1'b0;
+	end
+end endgenerate
+//PA coverage bind instances
+if(!pa_param[0])
+	mspa_fsm mspa_fsm();
+
+initial;
+
+// UPF Top's Instance
+mspa_upf_top mspa_upf_top();
+
+//Vhdl package signals spy
+generate if(pa_param[0]) begin : vhdl_sigspy_blk
+	initial begin
+		$upf_init_signal_spy("mspa_pack::mspa0_PD_top_DOMAIN_PWR_2","mspa_pack_vh::mspa0_PD_top_DOMAIN_PWR_2",0);
+		$upf_init_signal_spy("mspa_pack::mspa1_PD_sw_DOMAIN_PWR_1","mspa_pack_vh::mspa1_PD_sw_DOMAIN_PWR_1",0);
+		$upf_init_signal_spy("mspa_pack::paopt_t0cond","mspa_pack_vh::paopt_t0cond",0);
+		$upf_init_signal_spy("mspa_pack::SW_DIS_mspa30_SW_chk","mspa_pack_vh::SW_DIS_mspa30_SW_chk",0);
+		$upf_init_signal_spy("mspa_pack::mspa31_pd_sw_iso_ss","mspa_pack_vh::mspa31_pd_sw_iso_ss",0);
+		$upf_init_signal_spy("mspa_pack::mspa4_PWR_SW","mspa_pack_vh::mspa4_PWR_SW",0);
+		$upf_init_signal_spy("mspa_pack::mspa3_pd_sw_iso_ISO_ENABLE","mspa_pack_vh::mspa3_pd_sw_iso_ISO_ENABLE",0);
+		$upf_init_signal_spy("mspa_pack::mspa2_pd_sw_iso_ISO_PWR","mspa_pack_vh::mspa2_pd_sw_iso_ISO_PWR",0);
+		$upf_init_signal_spy("mspa_pack::mspa1_PD_sw_DOMAIN_PWR","mspa_pack_vh::mspa1_PD_sw_DOMAIN_PWR",0);
+		$upf_init_signal_spy("mspa_pack::mspa0_PD_top_DOMAIN_PWR","mspa_pack_vh::mspa0_PD_top_DOMAIN_PWR",0);
+		$upf_init_signal_spy("mspa_pack::vdd_n_mspaScope1_dut_chk","mspa_pack_vh::vdd_n_mspaScope1_dut_chk",0);
+		$upf_init_signal_spy("mspa_pack::gnd_n_mspaScope1_dut_chk","mspa_pack_vh::gnd_n_mspaScope1_dut_chk",0);
+		$upf_init_signal_spy("mspa_pack::sw_vdd_n_mspaScope1_dut_chk","mspa_pack_vh::sw_vdd_n_mspaScope1_dut_chk",0);
+	end
+end endgenerate
+generate begin : mspa_instrumented_pwr_blk
+	initial begin
+		paopt_t0cond = 0;
+		#1 paopt_t0cond = 1;
+	end
+
+	always @(mspa0_PD_top_DOMAIN_PWR)
+	if(paopt_t0cond)
+		mspa0_PD_top_DOMAIN_PWR_2 = mspa0_PD_top_DOMAIN_PWR;
+	else if(mspa_top.pa_time0param)
+		#0 mspa0_PD_top_DOMAIN_PWR_2 = mspa0_PD_top_DOMAIN_PWR;
+
+	assign mspa0_PD_top_DOMAIN_PWR_2_wire = mspa0_PD_top_DOMAIN_PWR_2;
+
+	always @(mspa1_PD_sw_DOMAIN_PWR)
+	if(paopt_t0cond)
+		mspa1_PD_sw_DOMAIN_PWR_1 = mspa1_PD_sw_DOMAIN_PWR;
+	else if(mspa_top.pa_time0param)
+		#0 mspa1_PD_sw_DOMAIN_PWR_1 = mspa1_PD_sw_DOMAIN_PWR;
+
+	assign mspa1_PD_sw_DOMAIN_PWR_1_wire = mspa1_PD_sw_DOMAIN_PWR_1;
+
+end endgenerate
+	PD_ACTVT_INFO inst1_PD_ACTVT_INFO (
+		 .PCS(mspa1_PD_sw_DOMAIN_PWR),
+		 .PD_NAME("PD_sw"),
+		 .MODE("powered"),
+		 .TYPE()
+	 );
+	PD_ACTVT_INFO inst2_PD_ACTVT_INFO (
+		 .PCS(mspa0_PD_top_DOMAIN_PWR),
+		 .PD_NAME("PD_top"),
+		 .MODE("powered"),
+		 .TYPE()
+	 );
+/* Block containing Instantiations ----> */
+
+generate begin: blk0
+
+	/* Internal Signal Declarations ---> */
+	reg  mspa282_rst;
+	reg  mspa281_clk;
+	MSPA_CRPT_DELAYED_FF inst3_MSPA_CRPT_DELAYED_FF (
+		 .PWR(mspa0_PD_top_DOMAIN_PWR),
+		 .CLK(mspa281_clk),
+		 .SET(),
+		 .RESET(mspa282_rst),
+		 .Q(), //Target is not required for event triggering
+		 .D() //Input to reg/latch (i.e. D) is not required for event triggering
+	 );
+end endgenerate //blk0
+/* Block containing Instantiations ----> */
+
+generate begin: blk1
+
+	/* Internal Signal Declarations ---> */
+	reg  mspa498_rst;
+	reg  mspa497_clk;
+	MSPA_CRPT_DELAYED_FF inst4_MSPA_CRPT_DELAYED_FF (
+		 .PWR(mspa1_PD_sw_DOMAIN_PWR),
+		 .CLK(mspa497_clk),
+		 .SET(),
+		 .RESET(mspa498_rst),
+		 .Q(), //Target is not required for event triggering
+		 .D() //Input to reg/latch (i.e. D) is not required for event triggering
+	 );
+end endgenerate //blk1
+	initial begin
+		sSignalNames[7] = "r_set_ready,\nr_start_final_addition,\nr_inc,\nr_start_p,\nr_start_r,\nr_commutation_config[1:0],\nr_s6,\nr_s5,\nr_s4,\nr_s3,\nr_s2,\nr_s1";
+		sSignalNames[8] = "r_s0";
+	end
+	initial begin
+		sSignalNames[9] = "r_n[8:0],\nr_r2_mod_n[8:0],\nr_t_sub_1[3:0],\nr_c[8:0],\nr_d[8:0],\nd2_start_final_addition,\nd1_start_final_addition,\nr_n_prev[8:0]";
+		sSignalNames[10] = "r_ready";
+	end
+
+/* CORRUPTION INSTANCES ---> */
+
+
+CORRUPT inst5_CORRUPT (
+	 .PWR(mspa1_PD_sw_DOMAIN_PWR)
+);
+
+CORRUPT inst6_CORRUPT (
+	 .PWR(mspa0_PD_top_DOMAIN_PWR)
+);
+generate begin: toggle_checks
+	MSPA_T_TRIG inst7_MSPA_T_TRIG ( !(  mspa1_PD_sw_DOMAIN_PWR  ) );
+	MSPA_T_TRIG inst8_MSPA_T_TRIG ( !(  mspa0_PD_top_DOMAIN_PWR  ) );
+end endgenerate // toggle_checks
+wire mspa_pcs0;
+assign mspa_pcs0 = mspa3_pd_sw_iso_ISO_ENABLE;
+wire mspa1_PD_sw_DOMAIN_PWR_1_href;
+assign mspa1_PD_sw_DOMAIN_PWR_1_href = mspa1_PD_sw_DOMAIN_PWR;
+wire mspa0_PD_top_DOMAIN_PWR_2_href;
+assign mspa0_PD_top_DOMAIN_PWR_2_href = mspa0_PD_top_DOMAIN_PWR;
+wire alw_on;
+assign alw_on = 1'b1;
+
+endmodule
+/*===== CORRUPT POWER AWARE MODEL =====*/
+module MSPA_CRPT_DELAYED_FF(input PWR, CLK, RESET, SET,D,output Q);
+   parameter int pa_time0param = 0;
+    event  pa_reset_register,pa_set_register;
+    event  pa_corrupt_register,pa_release_register;
+   initial begin
+        #0;
+        if(pa_time0param == 1 && (PWR === 1'bx || PWR === 1'b0))
+            ->pa_corrupt_register;
+   end
+    always@(posedge PWR)
+    begin
+       ->pa_release_register;
+       #0
+       if(RESET) 
+         ->pa_reset_register;
+       else if(SET) 
+         ->pa_set_register;
+    end
+    always@(negedge PWR)
+       ->pa_corrupt_register;
+endmodule
+/*===== ACTIVITY TRIGGER MODEL =====*/
+module MSPA_T_TRIG(in_T_mode);
+    input in_T_mode;
+    event pa_T_mode_on;
+    event pa_T_mode_off;
+    always @(posedge in_T_mode)
+        -> pa_T_mode_on;
+    always @(negedge in_T_mode)
+        -> pa_T_mode_off;
+endmodule
+module PD_ACTVT_INFO(input PCS,input string PD_NAME,input	string MODE,input string TYPE);
+    (*UPF_PA_OBJ = "TRUE"*) always @(PCS)
+    begin
+    if(PCS == 1)
+    begin
+    pd_actvt_info_1 : (*UPF_PA_OBJ = "TRUE"*)  assert(1) $pa_messagelog("%:S (vsim-%:I) %:C: Time: %s, Power domain '%:R' is %s up. %s",$pa_get_svrt("Note","8902",PD_NAME),"8902","MSPA_PD_STATUS_INFO",$pa_pptime,PD_NAME,MODE,TYPE); 
+    end
+    if(PCS == 0)
+    begin
+     pd_actvt_info_2 : (*UPF_PA_OBJ = "TRUE"*)  assert(1) $pa_messagelog("%:S (vsim-%:I) %:C: Time: %s, Power domain '%:R' is %s down. %s",$pa_get_svrt("Note","8902",PD_NAME),"8902","MSPA_PD_STATUS_INFO",$pa_pptime,PD_NAME,MODE,TYPE);; 
+    end
+    end
+endmodule
+/*=====ISOLATION RACE CHECK MODEL =====*/
+program ISO_RACE_DELAY (input sig,output sig_delayed);
+    assign sig_delayed = sig; 
+endprogram
+module iso_race_check #(parameter left = 0,parameter right = 0) (inp_port,iso_enable,inp_port_s_p,inp_port_s_n,race_checker);
+  input wire iso_enable;
+  input wire [left:right]inp_port;
+  output reg [left:right]inp_port_s_p;
+  output reg [left:right]inp_port_s_n;
+  output reg race_checker;
+  reg iso_enable_delayed;
+  assign race_checker = iso_enable;
+  assign inp_port_s_p = ISO_RACE_POS.inp_port;
+  assign inp_port_s_n = ISO_RACE_NEG.inp_port;
+clocking ISO_RACE_POS @(posedge iso_enable);
+  input #1step  inp_port;
+endclocking
+clocking ISO_RACE_NEG @(negedge iso_enable);
+  input #1step  inp_port;
+endclocking
+endmodule
+
+/*=====ISOLATION RACE CHECK MODEL =====*/
+module ISO_ASSERT_CHECK #(parameter left = 0,parameter right=0) (inp_port,iso_enable,iso_enable_sample,sample_value,_checker_);
+  input wire iso_enable;
+  input wire iso_enable_sample;
+  input reg [left:right]inp_port;
+  output reg _checker_;
+  output reg [left:right]sample_value;
+  reg iso_enable_delayed;
+assign _checker_ = iso_enable;
+always @(ISO_RACE_SAMPLE.inp_port) sample_value = ISO_RACE_SAMPLE.inp_port;
+clocking ISO_RACE_SAMPLE @(posedge iso_enable_sample);
+  input #1step  inp_port;
+endclocking
+endmodule
+
+module pa_iso_cell_checks_int ( input int isolation_output, isolation_input,
+			input isolation_signal, input int clamp_value,input int portid, pdid);
+import mspa_pack::*;
+wire [31 : 0] rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg [31 : 0] isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(31,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire [31 : 0] rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire [31 : 0] rf_iso_clamp;
+assign rf_iso_clamp = clamp_value;
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_iso_cell_checks_vec #(parameter msb = 0)( input [msb : 0]isolation_output, isolation_input,
+			input isolation_signal,clamp_value,input int portid,pdid);
+import mspa_pack::*;
+wire [msb : 0] rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg [msb : 0] isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(msb,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire [msb : 0] rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire [msb : 0] rf_iso_clamp;
+assign rf_iso_clamp = {(msb+1){clamp_value}};
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_iso_cell_checks ( input isolation_output, isolation_input,
+			input isolation_signal,clamp_value,input int portid,pdid);
+import mspa_pack::*;
+wire  rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg  isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(0,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire  rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire  rf_iso_clamp;
+assign rf_iso_clamp = clamp_value;
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_iso_cell_latch_checks_int ( input int isolation_output, isolation_input,
+			input isolation_signal, input int portid, pdid);
+import mspa_pack::*;
+wire [31 : 0] rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg [31 : 0] isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(31,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire [31 : 0] rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire [31 : 0] rf_iso_clamp;
+assign rf_iso_clamp = isolation_output_pos;
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_iso_cell_latch_checks_vec #(parameter msb = 0)( input [msb : 0]isolation_output, isolation_input,
+			input isolation_signal,input int portid,pdid);
+import mspa_pack::*;
+wire [msb : 0] rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg [msb : 0] isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(msb,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire [msb : 0] rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire [msb : 0] rf_iso_clamp;
+assign rf_iso_clamp = isolation_output_pos;
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_iso_cell_latch_checks ( input isolation_output, isolation_input,
+			input isolation_signal,input int portid,pdid);
+import mspa_pack::*;
+wire  rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg  isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(0,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire  rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire  rf_iso_clamp;
+assign rf_iso_clamp = isolation_output_pos;
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_iso_cell_dash_inst_checks_int ( input int isolation_output, isolation_input,
+			input isolation_signal, input int clamp_value,input int pdid);
+import mspa_pack::*;
+wire [31 : 0] rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg [31 : 0] isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(31,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire [31 : 0] rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[$pa_port_id()],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire [31 : 0] rf_iso_clamp;
+assign rf_iso_clamp = clamp_value;
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[$pa_port_id()],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_iso_cell_dash_inst_checks_vec #(parameter msb = 0)( input [msb : 0]isolation_output, isolation_input,
+			input isolation_signal,clamp_value,input int pdid);
+import mspa_pack::*;
+wire [msb : 0] rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg [msb : 0] isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(msb,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire [msb : 0] rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[$pa_port_id()],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire [msb : 0] rf_iso_clamp;
+assign rf_iso_clamp = {(msb+1){clamp_value}};
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[$pa_port_id()],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_iso_cell_dash_inst_checks ( input isolation_output, isolation_input,
+			input isolation_signal,clamp_value,input int pdid);
+import mspa_pack::*;
+wire  rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg  isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(0,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire  rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[$pa_port_id()],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire  rf_iso_clamp;
+assign rf_iso_clamp = clamp_value;
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[$pa_port_id()],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_iso_cell_dash_inst_latch_checks_int ( input int isolation_output, isolation_input,
+			input isolation_signal, input int pdid);
+import mspa_pack::*;
+wire [31 : 0] rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg [31 : 0] isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(31,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire [31 : 0] rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[$pa_port_id()],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire [31 : 0] rf_iso_clamp;
+assign rf_iso_clamp = isolation_output_pos;
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[$pa_port_id()],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_iso_cell_dash_inst_latch_checks_vec #(parameter msb = 0)( input [msb : 0]isolation_output, isolation_input,
+			input isolation_signal,input int pdid);
+import mspa_pack::*;
+wire [msb : 0] rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg [msb : 0] isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(msb,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire [msb : 0] rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[$pa_port_id()],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire [msb : 0] rf_iso_clamp;
+assign rf_iso_clamp = isolation_output_pos;
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[$pa_port_id()],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_iso_cell_dash_inst_latch_checks ( input isolation_output, isolation_input,
+			input isolation_signal,input int pdid);
+import mspa_pack::*;
+wire  rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg  isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(0,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire  rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[$pa_port_id()],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire  rf_iso_clamp;
+assign rf_iso_clamp = isolation_output_pos;
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[$pa_port_id()],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[$pa_port_id()], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_iso_src_sink_check (input iso_enable, src_pwr, sink_pwr, iso_pwr,
+			input int srcsimstateint,sinksimstateint,portid,pdid);
+import mspa_pack::*;
+import UPF::*;
+power_state_simstate srcSimState ;
+power_state_simstate sinkSimState ;
+
+assign srcSimState = (srcsimstateint != 7) ? mspa_int_to_simstate(srcsimstateint) : ((src_pwr == 1'b1) ? NORMAL : CORRUPT);
+assign sinkSimState = (sinksimstateint != 7) ? mspa_int_to_simstate(sinksimstateint) : ((sink_pwr == 1'b1) ? NORMAL : CORRUPT);
+
+(*UPF_PA_OBJ = "TRUE"*) always @( srcSimState)
+	QSPA_ISO_EN_PSO : (*UPF_PA_OBJ = "TRUE"*) assert ( (srcSimState == NORMAL) || iso_enable || (sinkSimState == CORRUPT) ) else $pa_messagelog(
+    "%:S (vsim-%:I) %:C: Time: %s, Isolation control (%b) is not enabled when %s for the following:%s. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8918",pdInfoTable[pdid].sPdName), "8918", "MSPA_ISO_EN_PSO",$pa_pptime,iso_enable,msg_str_func(srcSimState,1),sSignalNames[portid],pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+
+(*UPF_PA_OBJ = "TRUE"*) always @( negedge iso_enable)
+	QSPA_ISO_DIS_PG : (*UPF_PA_OBJ = "TRUE"*) assert ( (srcSimState == NORMAL) || (sinkSimState == CORRUPT) ) else $pa_messagelog(
+  	"%:S (vsim-%:I) %:C: Time: %s, Isolation control is disabled during %s (%b) for the following:%s. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8919",pdInfoTable[pdid].sPdName), "8919", "MSPA_ISO_DIS_PG",$pa_pptime,msg_str_func(srcSimState,0),src_pwr,sSignalNames[portid],pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+
+
+/*===== Check for Redundant Activity On Isolation Control =====*/
+bit iso_needed_cntr;
+bit ira_monitor;
+bit iso_needed;
+assign iso_needed = (iso_enable === 1'b1) && (srcSimState != NORMAL) && (sinkSimState != CORRUPT);
+
+always @(posedge iso_enable, posedge iso_needed)
+begin
+	if(iso_enable === 1'b1)  begin
+		if(iso_needed === 1'b1)
+			iso_needed_cntr <= 1'b1;
+		else
+		begin
+			iso_needed_cntr <= 1'b0;
+			ira_monitor <= 1'b1;
+		end
+	end
+end
+
+(*UPF_PA_OBJ = "TRUE"*) always @(negedge iso_enable, negedge iso_pwr)
+  begin
+    if((iso_enable === 1'b0) && (ira_monitor === 1'b1))
+        begin
+          QSPA_ISO_REDUNDANT_ACT_1: (*UPF_PA_OBJ = "TRUE"*) assert ( iso_needed_cntr ) else $pa_messagelog(
+            "%:S (vsim-%:I) %:C: Time: %s, Redundant activity on isolation control signal, for crossing %s.%s \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8934",pdInfoTable[pdid].sPdName), "8934", "MSPA_ISO_REDUNDANT_ACT", $pa_pptime, sSignalNames[portid+1],sSignalNames[portid],pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+        end
+    ira_monitor <= 1'b0;
+  end
+
+final
+  begin
+    if(ira_monitor === 1'b1)
+      QSPA_ISO_REDUNDANT_ACT_2: (*UPF_PA_OBJ = "TRUE"*) assert ( iso_needed_cntr ) else $pa_messagelog(
+        "%:S (vsim-%:I) %:C: Time: %s, Redundant activity on isolation control signal, for crossing %s.%s \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8934",pdInfoTable[pdid].sPdName), "8934", "MSPA_ISO_REDUNDANT_ACT", $pa_pptime, sSignalNames[portid+1],sSignalNames[portid],pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+  end
+endmodule
+
+module pa_missing_iso_check (src_pwr,sink_pwr,src_vdd,src_vss,sink_vdd,sink_vss,portid,pdid,stype);
+import UPF::*;
+import mspa_pack::*;
+input wire src_pwr,sink_pwr;
+input supply_net_type src_vdd,src_vss,sink_vdd,sink_vss;
+input int portid,pdid,stype;
+wire src_pg_sig;
+wire sink_pg_sig;
+int stypeId ;
+
+assign stypeId = stype ? 3 : 2;
+
+assign src_pg_sig =  stype[0] ? (get_supply_on_state( src_vdd ) && get_supply_on_state( src_vss )) : src_pwr ;
+assign sink_pg_sig = stype[1] ? (get_supply_on_state( sink_vdd ) && get_supply_on_state( sink_vss )) : sink_pwr;
+
+/* UPF check to dynamically detect missing isolation cells */
+(*UPF_PA_OBJ = "TRUE"*) always @(src_vdd,src_vss,sink_vdd,sink_vss)
+  QSPA_UPF_MISSING_ISO_CHK : (*UPF_PA_OBJ = "TRUE"*) assert (!((src_pg_sig === 1'b0) && (sink_pg_sig === 1'b1))) else $pa_messagelog(
+     "%:S (vsim-%:I) %:C: Time: %s, Missing isolation cell for domain boundary, %s => %s%s for following:%s,  \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8929","--"), "8929", "MSPA_UPF_MISSING_ISO_CHK", $pa_pptime, sSignalNames[portid],sSignalNames[portid+1],sSignalNames[stypeId],sSignalNames[portid+2],pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,"--");
+
+endmodule
+
+module pa_missing_ls_check (src_pwr,sink_pwr,src_vdd,src_vss,sink_vdd,sink_vss,portid,pdid,stype,thold);
+import UPF::*;
+import mspa_pack::*;
+input wire src_pwr,sink_pwr;
+input supply_net_type src_vdd,src_vss,sink_vdd,sink_vss;
+input int portid,pdid,stype,thold;
+wire src_pg_sig;
+wire sink_pg_sig;
+int stypeId ;
+
+assign stypeId = stype ? 3 : 2;
+
+int operating_voltage_src;
+assign operating_voltage_src = src_vdd.voltage - src_vss.voltage;
+
+/* Operating voltage for sink  */
+int operating_voltage_sink;
+assign operating_voltage_sink = sink_vdd.voltage - sink_vss.voltage;
+
+assign src_pg_sig =  stype[0] ? (get_supply_on_state( src_vdd ) && get_supply_on_state( src_vss )) : src_pwr ;
+assign sink_pg_sig = stype[1] ? (get_supply_on_state( sink_vdd ) && get_supply_on_state( sink_vss )) : sink_pwr;
+
+/* UPF check to dynamically detect missing LS cells */
+(*UPF_PA_OBJ = "TRUE"*) always @(src_vdd,src_vss,sink_vdd,sink_vss,operating_voltage_src,operating_voltage_sink)
+ QSPA_UPF_MISSING_LS_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( !( src_pg_sig && sink_pg_sig && ( mspa_abs( operating_voltage_src - operating_voltage_sink ) > thold ) ) ) else $pa_messagelog(
+   "%:S (vsim-%:I) %:C: Time: %s, Missing level shifters for domain boundary, %s ( Operating Voltage: %f V ) => %s ( Operating Voltage: %f V )%s for following:%s \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8915","--"), "8915", "MSPA_UPF_MISSING_LS_CHK",$pa_pptime, sSignalNames[portid], mspa_int_to_real_volt( operating_voltage_src ), sSignalNames[portid+1], mspa_int_to_real_volt( operating_voltage_sink ), sSignalNames[stypeId], sSignalNames[portid+2], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, "--");
+
+endmodule
+
+module pa_incorrect_ls_check (src_pwr,sink_pwr,src_vdd,src_vss,sink_vdd,sink_vss,portid,pdid,stype,thold);
+import UPF::*;
+import mspa_pack::*;
+input wire src_pwr,sink_pwr;
+input supply_net_type src_vdd,src_vss,sink_vdd,sink_vss;
+input int portid,pdid,stype,thold;
+wire src_pg_sig;
+wire sink_pg_sig;
+int stypeId ;
+
+assign stypeId = (stype[0] || stype[1]) ? 3 : 2;
+
+/* Operating voltage for src  */
+int operating_voltage_src;
+assign operating_voltage_src = src_vdd.voltage - src_vss.voltage;
+
+/* Operating voltage for sink  */
+int operating_voltage_sink;
+assign operating_voltage_sink = sink_vdd.voltage - sink_vss.voltage;
+
+assign src_pg_sig =  stype[0] ? (get_supply_on_state( src_vdd ) && get_supply_on_state( src_vss )) : src_pwr ;
+assign sink_pg_sig = stype[1] ? (get_supply_on_state( sink_vdd ) && get_supply_on_state( sink_vss )) : sink_pwr;
+
+/* UPF check to dynamically detect incorrect LS cells */
+(*UPF_PA_OBJ = "TRUE"*) always @(src_vdd,src_vss,sink_vdd,sink_vss,operating_voltage_src,operating_voltage_sink)
+ QSPA_UPF_INCORRECT_LS_CHK : (*UPF_PA_OBJ = "TRUE"*) assert (!( src_pg_sig && sink_pg_sig && ( mspa_abs( operating_voltage_src - operating_voltage_sink ) > thold ) && (stype[2] ? ((operating_voltage_src - operating_voltage_sink) > 0) : ((operating_voltage_src - operating_voltage_sink) < 0)))) else $pa_messagelog(
+   "%:S (vsim-%:I) %:C: Time: %s, Shift mismatch for level shifter (%s, rule: %s, Domain: %s ) at domain boundary, %s ( Operating Voltage: %f V ) => %s ( Operating Voltage: %f V )%s for following:%s \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8917",pdInfoTable[pdid].sPdName), "8917", "MSPA_UPF_INCORRECT_LS_CHK",$pa_pptime, pdInfoTable[pdid].sStrtgyName,sSignalNames[stype[2]],pdInfoTable[pdid].sPdName,sSignalNames[portid], mspa_int_to_real_volt( operating_voltage_src ), sSignalNames[portid+1], mspa_int_to_real_volt( operating_voltage_sink ), sSignalNames[stypeId], sSignalNames[portid+2], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+
+endmodule
+
+// ISO
+// single bit
+module mspa_iso_chk_cell(isolation_input,clamp_value,isolation_output,power,isolation_signal,portid,pdid);
+	input wire power,isolation_signal;
+	input isolation_input;
+	output reg isolation_output;
+	input clamp_value;
+	input int portid, pdid;
+ 	always@(power,isolation_signal,isolation_input)
+ 	begin : pcs
+ 	 	if(power)
+ 	 	begin
+ 	 	 	if(isolation_signal === 1'bx)
+ 	 	 	 	isolation_output = 1'bx;
+ 	 	 	else if(isolation_signal === 1'b1)
+ 	 	 	 	isolation_output = clamp_value;
+ 	 	 	else
+ 	 	 	 	isolation_output = isolation_input;
+ 	 	end
+ 	 	else
+ 	 	 	isolation_output = 1'bx;
+ 	end
+
+import mspa_pack::*;
+wire  rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg  isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(0,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire  rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire  rf_iso_clamp;
+assign rf_iso_clamp = clamp_value;
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+
+endmodule
+
+module mspa_iso_chk_cell_2state(isolation_input,clamp_value,isolation_output,power,isolation_signal,portid,pdid);
+	input wire power,isolation_signal;
+	input bit isolation_input;
+	output bit isolation_output;
+	input clamp_value;
+	input int portid, pdid;
+ 	always@(power,isolation_signal,isolation_input)
+ 	begin : pcs
+ 	 	if(power)
+ 	 	begin
+ 	 	 	if(isolation_signal === 1'bx)
+ 	 	 	 	isolation_output = 1'b0;
+ 	 	 	else if(isolation_signal === 1'b1)
+ 	 	 	 	isolation_output = clamp_value;
+ 	 	 	else
+ 	 	 	 	isolation_output = isolation_input;
+ 	 	end
+ 	 	else
+ 	 	 	isolation_output = 1'b0;
+ 	end
+
+
+import mspa_pack::*;
+wire  rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg  isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(0,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire  rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire  rf_iso_clamp;
+assign rf_iso_clamp = clamp_value;
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+
+endmodule
+
+// packed array
+module mspa_iso_chk_cell_vec(isolation_input,clamp_value,isolation_output,power,isolation_signal,portid,pdid);
+	`protected
+
+    MTI!#b?{T7O[>TB{^BXlD^><~3yuR1jGGw17R?UzwZ[_u'EFm+A#UsJxVQA}0Jt7Twu=K+QZO??@
+    5}i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input wire power,isolation_signal;
+	input [msb:0]isolation_input;
+	output reg [msb:0]isolation_output;
+	input clamp_value;
+	input int portid, pdid;
+ 	always@(power,isolation_signal,isolation_input)
+ 	begin : pcs
+ 	 	if(power)
+ 	 	begin
+ 	 	 	if(isolation_signal === 1'bx)
+ 	 	 	 	isolation_output = 'bx;
+ 	 	 	else if(isolation_signal === 1'b1)
+ 	 	 	 	isolation_output = {(msb+1){clamp_value}};
+ 	 	 	else
+ 	 	 	 	isolation_output = isolation_input;
+ 	 	end
+ 	 	else
+ 	 	 	isolation_output = 'bx;
+ 	end
+
+import mspa_pack::*;
+wire [msb : 0] rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg [msb : 0] isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(msb,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire [msb : 0] rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire [msb : 0] rf_iso_clamp;
+assign rf_iso_clamp = {(msb+1){clamp_value}};
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+
+endmodule
+
+module mspa_iso_chk_cell_2state_vec(isolation_input,clamp_value,isolation_output,power,isolation_signal,portid,pdid);
+	`protected
+
+    MTI!#@I;CeA\-1H,_rJm75nl'+&e\W?[V?W?&I~^3|Qmp$=@n>L$\+Ov+(;-pi7Twu=K+QZO??@5
+    }i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input wire power,isolation_signal;
+	input bit [msb:0]isolation_input;
+	output bit [msb:0]isolation_output;
+	input clamp_value;
+	input int portid, pdid;
+ 	always@(power,isolation_signal,isolation_input)
+ 	begin : pcs
+ 	 	if(power)
+ 	 	begin
+ 	 	 	if(isolation_signal === 1'bx)
+ 	 	 	 	isolation_output = 'b0;
+ 	 	 	else if(isolation_signal === 1'b1)
+ 	 	 	 	isolation_output = {(msb+1){clamp_value}};
+ 	 	 	else
+ 	 	 	 	isolation_output = isolation_input;
+ 	 	end
+ 	 	else
+ 	 	 	isolation_output = 'b0;
+ 	end
+
+import mspa_pack::*;
+wire [msb : 0] rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg [msb : 0] isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(msb,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire [msb : 0] rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire [msb : 0] rf_iso_clamp;
+assign rf_iso_clamp = {(msb+1){clamp_value}};
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+
+endmodule
+
+// unpacked array
+module mspa_iso_chk_cell_u_vec(isolation_input,clamp_value,isolation_output,power,isolation_signal,portid,pdid);
+	`protected
+
+    MTI!#+rQ2B#7{+EJaWY=}2DkV%;11!WQrZFh[:^uEi$me$=@X>\3Kn]xETz?}HN7Twu=K+QZO??@
+    5}i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input wire power,isolation_signal;
+	input isolation_input[msb:0];
+	output reg isolation_output[msb:0];
+	input clamp_value;
+	input int portid, pdid;
+	for(genvar i=0;i<=msb;i=i+1)
+	begin : gen1
+ 	always@(power,isolation_signal,isolation_input[i])
+ 	begin : pcs
+ 	 	if(power)
+ 	 	begin
+ 	 	 	if(isolation_signal === 1'bx)
+ 	 	 	 	isolation_output[i] = 1'bx;
+ 	 	 	else if(isolation_signal === 1'b1)
+ 	 	 	 	isolation_output[i] = clamp_value;
+ 	 	 	else
+ 	 	 	 	isolation_output[i] = isolation_input[i];
+ 	 	end
+ 	 	else
+ 	 	  	isolation_output[i] = 1'bx;
+ 	end
+	end
+
+	for(genvar i=0;i<=msb;i=i+1) begin : qspa_iso_cell_chks
+		pa_iso_cell_checks pa_iso_cell_checks(.isolation_input(isolation_input[i]),
+	.isolation_output(isolation_output[i]),.isolation_signal(isolation_signal),.clamp_value(clamp_value),.portid(portid+i),.pdid(pdid));
+ 	end
+endmodule
+
+module mspa_iso_chk_cell_u_2state_vec(isolation_input,clamp_value,isolation_output,power,isolation_signal,portid,pdid);
+	`protected
+
+    MTI!#eBG{r1~\RvX!eoj-<5CnnlX~@aY!rnwRNg<V|FfI=iHurVo$AO;yE%d|lTwu=K+QZO??@5}
+    i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input wire power,isolation_signal;
+	input bit isolation_input[msb:0];
+	output bit isolation_output[msb:0];
+	input clamp_value;
+	input int portid, pdid;
+	for(genvar i=0;i<=msb;i=i+1)
+	begin : gen1
+ 	always@(power,isolation_signal,isolation_input[i])
+ 	begin : pcs
+ 	 	if(power)
+ 	 	begin
+ 	 	 	if(isolation_signal === 1'bx)
+ 	 	 	 	isolation_output[i] = 1'b0;
+ 	 	 	else if(isolation_signal === 1'b1)
+ 	 	 	 	isolation_output[i] = clamp_value;
+ 	 	 	else
+ 	 	 	 	isolation_output[i] = isolation_input[i];
+ 	 	end
+ 	 	else
+ 	 	  	isolation_output[i] = 1'b0;
+ 	end
+ 	end
+
+	for(genvar i=0;i<=msb;i=i+1) begin : qspa_iso_cell_chks
+		pa_iso_cell_checks pa_iso_cell_checks(.isolation_input(isolation_input[i]),
+	.isolation_output(isolation_output[i]),.isolation_signal(isolation_signal),.clamp_value(clamp_value),.portid(portid+1),.pdid(pdid));
+ 	end
+
+endmodule
+
+
+// latch
+
+// single bit
+module mspa_iso_chk_cell_latch(isolation_input,isolation_output,power,isolation_signal,portid,pdid);
+	input wire power,isolation_signal;
+	input isolation_input;
+	output reg isolation_output;
+	input int portid, pdid;
+ 	always@(power,isolation_signal,isolation_input)
+ 	begin : pcs
+ 	 	if(power)
+ 	 	begin
+ 	 	 	if(isolation_signal === 1'bx)
+ 	 	 	 	isolation_output = 1'bx;
+ 	 	 	else if(isolation_signal !== 1'b1)
+ 	 	 	 	isolation_output = isolation_input;
+ 	 	end
+ 	 	else
+ 	 	 	isolation_output = 1'bx;
+ 	end
+
+import mspa_pack::*;
+wire  rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg  isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(0,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire  rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire  rf_iso_clamp;
+assign rf_iso_clamp = isolation_output_pos;
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+
+endmodule
+
+module mspa_iso_chk_cell_2state_latch(isolation_input,isolation_output,power,isolation_signal,portid,pdid);
+	input wire power,isolation_signal;
+	input bit isolation_input;
+	output bit isolation_output;
+	input int portid, pdid;
+ 	always@(power,isolation_signal,isolation_input)
+ 	begin : pcs
+ 	 	if(power)
+ 	 	begin
+ 	 	 	if(isolation_signal === 1'bx)
+ 	 	 	 	isolation_output = 1'b0;
+ 	 	 	else if(isolation_signal !== 1'b1)
+ 	 	 	 	isolation_output = isolation_input;
+ 	 	end
+ 	 	else
+ 	 	 	isolation_output = 1'b0;
+ 	end
+
+import mspa_pack::*;
+wire  rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg  isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(0,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire  rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire  rf_iso_clamp;
+assign rf_iso_clamp = isolation_output_pos;
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+
+endmodule
+
+// packed array
+module mspa_iso_chk_cell_latch_vec(isolation_input,isolation_output,power,isolation_signal,portid,pdid);
+	`protected
+
+    MTI!#rjB<p*JJrpr+$1<sIKJHT75;]x\H5$zxFf=]g'?,]=#XA+_K-U'aT*?<a|lTwu=K+QZO??@
+    5}i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input wire power,isolation_signal;
+	input [msb:0]isolation_input;
+	output reg [msb:0]isolation_output;
+	input int portid, pdid;
+ 	always@(power,isolation_signal,isolation_input)
+ 	begin : pcs
+ 	 	if(power)
+ 	 	begin
+ 	 	 	if(isolation_signal === 1'bx)
+ 	 	 	 	isolation_output = 'bx;
+ 	 	 	else if(isolation_signal !== 1'b1)
+ 	 	 	 	isolation_output = isolation_input;
+ 	 	end
+ 	 	else
+ 	 	 	isolation_output = 'bx;
+ 	end
+
+import mspa_pack::*;
+wire [msb : 0] rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg [msb : 0] isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(msb,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire [msb : 0] rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire [msb : 0] rf_iso_clamp;
+assign rf_iso_clamp = isolation_output_pos;
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+
+endmodule
+
+module mspa_iso_chk_cell_2state_latch_vec(isolation_input,isolation_output,power,isolation_signal,portid,pdid);
+	`protected
+
+    MTI!#smlaY9lua-9C]HW>R?eUYJ1#$CZ1#$V|%BR=iN1;1[_-Ir$p+ev+(;-pi7Twu=K+QZO??@5
+    }i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input wire power,isolation_signal;
+	input bit [msb:0]isolation_input;
+	output bit [msb:0]isolation_output;
+	input int portid, pdid;
+ 	always@(power,isolation_signal,isolation_input)
+ 	begin : pcs
+ 	 	if(power)
+ 	 	begin
+ 	 	 	if(isolation_signal === 1'bx)
+ 	 	 	 	isolation_output = 'b0;
+ 	 	 	else if(isolation_signal !== 1'b1)
+ 	 	 	 	isolation_output = isolation_input;
+ 	 	end
+ 	 	else
+ 	 	 	isolation_output = 'b0;
+ 	end
+
+import mspa_pack::*;
+wire [msb : 0] rf_isolation_output ;
+wire rf_iso_enable;
+
+clocking clk_blk_1 @(isolation_output);
+  input #0 inp_port1 = isolation_output;
+endclocking
+
+assign rf_isolation_output = clk_blk_1.inp_port1;
+
+clocking clk_blk_2 @(isolation_signal);
+  input #0 inp_port = isolation_signal;
+endclocking
+
+assign rf_iso_enable = clk_blk_2.inp_port;
+
+reg [msb : 0] isolation_output_pos, isolation_output_neg ;
+
+iso_race_check #(msb,0)iso_race_check_1(isolation_output,isolation_signal,isolation_output_pos,isolation_output_neg,);
+
+
+/*===== PA ISO FUNC CHECK MODEL =====*/
+wire [msb : 0] rf_isolation_input;
+
+clocking clk_blk_3 @(isolation_input);
+  input #0 inp_port2 = isolation_input;
+endclocking
+
+assign rf_isolation_input = clk_blk_3.inp_port2;
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output,rf_isolation_input)
+begin
+	if(rf_iso_enable !== 1'b1)
+	begin
+		QSPA_ISO_FUNC_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_input === isolation_output ) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from port value (%b) during non-isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8931",pdInfoTable[pdid].sPdName), "8931", "MSPA_ISO_FUNC_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],isolation_output,isolation_input,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+	end
+end
+
+/*===== PA ISO CLAMP CHECK MODEL =====*/
+
+wire [msb : 0] rf_iso_clamp;
+assign rf_iso_clamp = isolation_output_pos;
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_iso_enable,rf_isolation_output)
+begin
+		QSPA_ISO_CLAMP_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (rf_iso_enable !== 1'b1) || ( rf_isolation_output === rf_iso_clamp )) else $pa_messagelog( 
+			"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' having value (%b) is different from clamp value (%b) during isolation period. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8930",pdInfoTable[pdid].sPdName), "8930", "MSPA_ISO_CLAMP_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,sPaPrefix,sSignalNames[portid],rf_isolation_output,rf_iso_clamp,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT TOGGLE CHECK MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) property pos (iso);
+  @(posedge iso) (1);
+endproperty
+(*UPF_PA_OBJ = "TRUE"*) property neg (iso);
+  @(negedge iso) (1);
+endproperty
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_pos: assert property	(pos(isolation_signal))
+if( isolation_signal === 1'b1 )
+begin
+	QSPA_ISO_TOGGLE_POSEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_pos === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+(*UPF_PA_OBJ = "TRUE"*) qspa_iso_port_toggle_neg: assert property (neg(isolation_signal))
+begin
+	QSPA_ISO_TOGGLE_NEGEDGE : (*UPF_PA_OBJ = "TRUE"*) assert ( isolation_output_neg === isolation_output ) else $pa_messagelog( 
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal is de-activated. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8910",pdInfoTable[pdid].sPdName), "8910", "MSPA_ISO_PORT_TOGGLE", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid],pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+
+/*===== PA ISO PORT ON ACT CHECK MODEL =====*/
+wire iso_enable_sampled;
+assign iso_enable_sampled = $sampled(isolation_signal);
+
+(*UPF_PA_OBJ = "TRUE"*) always @(rf_isolation_output)
+	QSPA_ISO_ON_ACT : (*UPF_PA_OBJ = "TRUE"*) assert ((iso_enable_sampled !== 1'b1) || (isolation_signal !== 1'b1)) else $pa_messagelog(
+		"%:S (vsim-%:I) %:C: Time: %s, Isolated port for isolation cell (strategy: %s) on port '%s%s' toggled when its control signal was active. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8908",pdInfoTable[pdid].sPdName), "8908", "MSPA_ISO_ON_ACT", $pa_pptime, pdInfoTable[pdid].sStrtgyName, sPaPrefix,sSignalNames[portid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+
+endmodule
+
+
+// unpacked array
+module mspa_iso_chk_cell_u_latch_vec(isolation_input,isolation_output,power,isolation_signal,portid,pdid);
+	`protected
+
+    MTI!#^+TzD]7Jio?3KEDC]s7T-Y{O-1EEx-1+|*3CuN1mv$=@n>q$O+zvQA!MJt7Twu=K+QZO??@
+    5}i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input wire power,isolation_signal;
+	input isolation_input[msb:0];
+	output reg isolation_output[msb:0];
+	input int portid, pdid;
+	for(genvar i=0;i<=msb;i=i+1)
+	begin : gen1
+ 	always@(power,isolation_signal,isolation_input[i])
+ 	begin : pcs
+ 	 	if(power)
+ 	 	begin
+ 	 	 	if(isolation_signal === 1'bx)
+ 	 	 	 	isolation_output[i] = 1'bx;
+ 	 	 	else if(isolation_signal !== 1'b1)
+ 	 	 	 	isolation_output[i] = isolation_input[i];
+ 	 	end
+ 	 	else
+ 	 	 	isolation_output[i] = 1'bx;
+ 	end
+ 	end
+
+	for(genvar i=0;i<=msb;i=i+1) begin : qspa_iso_cell_chks
+		pa_iso_cell_latch_checks pa_iso_cell_latch_checks(.isolation_input(isolation_input[i]),
+	.isolation_output(isolation_output[i]),.isolation_signal(isolation_signal),.portid(portid+i),.pdid(pdid));
+ 	end
+
+endmodule
+
+module mspa_iso_chk_cell_u_2state_latch_vec(isolation_input,isolation_output,power,isolation_signal,portid,pdid);
+	`protected
+
+    MTI!#3U\a+$CwE\oG\7a2Klk<xBBI}nBaK=+]"N>OW[yIBRiRX1YuD$2o_{72lB[lTwu=K+QZO??
+    @5}i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input wire power,isolation_signal;
+	input bit isolation_input[msb:0];
+	output bit isolation_output[msb:0];
+	input int portid, pdid;
+	for(genvar i=0;i<=msb;i=i+1)
+	begin : gen1
+ 	always@(power,isolation_signal,isolation_input[i])
+ 	begin : pcs
+ 	 	if(power)
+ 	 	begin
+ 	 	 	if(isolation_signal === 1'bx)
+ 	 	 	 	isolation_output[i] = 1'b0;
+ 	 	 	else if(isolation_signal !== 1'b1)
+ 	 	 	 	isolation_output[i] = isolation_input[i];
+ 	 	end
+ 	 	else
+ 	 	 	isolation_output[i] = 1'b0;
+ 	end
+ 	end
+
+	for(genvar i=0;i<=msb;i=i+1) begin : qspa_iso_cell_chks
+		pa_iso_cell_latch_checks pa_iso_cell_latch_checks(.isolation_input(isolation_input[i]),
+	.isolation_output(isolation_output[i]),.isolation_signal(isolation_signal),.portid(portid+i),.pdid(pdid));
+ 	end
+
+endmodule
+// LS
+module mspa_ls_cell(ls_input,ls_output,internal_supply);
+	input wire internal_supply;
+	input ls_input;
+	output ls_output;
+ 	generate begin : pcs
+	assign ls_output = internal_supply ? ls_input : 1'bx;
+	end endgenerate
+endmodule
+
+module mspa_ls_cell_2state(ls_input,ls_output,internal_supply);
+	input wire internal_supply;
+	input bit ls_input;
+	output bit ls_output;
+ 	generate begin : pcs
+	assign ls_output = internal_supply ? ls_input : 1'b0;
+	end endgenerate
+endmodule
+
+// packed array
+module mspa_ls_cell_vec(ls_input,ls_output,internal_supply);
+	`protected
+
+    MTI!#g!G*1]oB$z!Uz(v^><h;<EiZ1D^x+=,=?7#;[""a7i~$?+o2T_iv~<Vd|lTwu=K+QZO??@5
+    }i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input wire internal_supply;
+	input [msb:0]ls_input;
+	output [msb:0]ls_output;
+ 	generate begin : pcs
+	assign ls_output = internal_supply ? ls_input : 'bx;
+	end endgenerate
+endmodule
+
+module mspa_ls_cell_2state_vec(ls_input,ls_output,internal_supply);
+	`protected
+
+    MTI!#9pIDUb8sW7Ej@rB>eICu&XEQjx^1Qar#ae5s[6w[1[OXH*2D\rv+(;-pi7Twu=K+QZO??@5
+    }i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input wire internal_supply;
+	input bit [msb:0]ls_input;
+	output bit [msb:0]ls_output;
+ 	generate begin : pcs
+	assign ls_output = internal_supply ? ls_input : 'b0;
+	end endgenerate
+endmodule
+
+// unpacked array
+module mspa_ls_cell_u_vec(ls_input,ls_output,internal_supply);
+	`protected
+
+    MTI!#ll-E#*I'!,u\;xxC}v^nNJnrpeE1vpEL&QRU[L.*Ekx~Ero{<*~x)2lB[lTwu=K+QZO??@5
+    }i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input wire internal_supply;
+	input ls_input[msb:0];
+	output reg ls_output[msb:0];
+	for(genvar i=0;i<=msb;i=i+1) begin : gen1
+ 	begin : pcs
+	assign ls_output[i] = internal_supply ? ls_input[i] : 1'bx;
+ 	end
+ 	end
+endmodule
+
+module mspa_ls_cell_u_2state_vec(ls_input,ls_output,internal_supply);
+	`protected
+
+    MTI!#BAB2eKBxk>BJGi$?1ZWR'oi@*Br>7Q*Q=#lpu}k7@Yci+@BUDZGv+(;-pi7Twu=K+QZO??@
+    5}i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input wire internal_supply;
+	input bit ls_input[msb:0];
+	output bit ls_output[msb:0];
+	for(genvar i=0;i<=msb;i=i+1)
+	begin : gen1
+ 	begin : pcs
+	assign ls_output[i] = internal_supply ? ls_input[i] : 1'b0;
+ 	end
+ 	end
+endmodule
+
+
+// Buffers
+module mspa_buf_vec(buf_input,buf_output);
+	`protected
+
+    MTI!#2,VBo)D7_*51BeY[<H#BioKO35+DO3A&Im^^=@oe3E#CRO#{~w+U6I?]HN7Twu=K+QZO??@
+    5}i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input [msb:0]buf_input;
+	output [msb:0]buf_output;
+	assign buf_output = buf_input;
+endmodule
+
+module mspa_buf_u_vec(buf_input,buf_output);
+	`protected
+
+    MTI!#Ik3@^OUD"5lpVl?@X~w,auGTzQ2QIz1O[_uD+F^@-~N}U+Vr*]DQ@{]2-B[lTwu=K+QZO??
+    @5}i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input buf_input[msb:0];
+	output buf_output[msb:0];
+	for(genvar i=0;i<=msb;i=i+1)
+		assign buf_output[i] = buf_input[i];
+endmodule
+
+module mspa_buf(buf_input,buf_output);
+	input buf_input;
+	output buf_output;
+	assign buf_output = buf_input;
+endmodule
+
+module mspa_buf_2state_vec(buf_input,buf_output);
+	`protected
+
+    MTI!#}o=2);sm!=A*B^CK}p]Q_W'i^U+us^&[c%;oib77k~[mRoJamav;<,Jt7Twu=K+QZO??@5}
+    i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input bit [msb:0]buf_input;
+	output bit [msb:0]buf_output;
+	assign buf_output = buf_input;
+endmodule
+
+module mspa_buf_u_2state_vec(buf_input,buf_output);
+	`protected
+
+    MTI!#Kpnj7T]nz">\TEsjQ+>s'HD'JC\A2Jv"[;>[7ZBO,Eix@EVoT<O~x)2lB[lTwu=K+QZO??@
+    5}i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input bit buf_input[msb:0];
+	output bit buf_output[msb:0];
+	for(genvar i=0;i<=msb;i=i+1)
+		assign buf_output[i] = buf_input[i];
+endmodule
+
+module mspa_buf_2state(buf_input,buf_output);
+	input bit buf_input;
+	output bit buf_output;
+	assign buf_output = buf_input;
+endmodule
+
+// RS buffers
+// single bit
+module mspa_rs_buf(buf_input,buf_output,power);
+	input wire power;
+	input buf_input;
+	output buf_output;
+	assign buf_output = power ? buf_input : 1'bx;
+endmodule
+
+module mspa_rs_buf_2state(buf_input,buf_output,power);
+	input wire power;
+	input bit buf_input;
+	output bit buf_output;
+	assign buf_output = power ? buf_input : 1'b0;
+endmodule
+
+// packed array
+module mspa_rs_buf_vec(buf_input,buf_output,power);
+	`protected
+
+    MTI!#^Q@;xJ[,la^G^a!?y'[rkKXX]]IW{]sL&>lW[G~w-N7{]Eu]V!$_A<;lpi7Twu=K+QZO??@
+    5}i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input wire power;
+	input [msb:0]buf_input;
+	output [msb:0]buf_output;
+	assign buf_output = power ? buf_input : 'bx;
+endmodule
+
+module mspa_rs_buf_2state_vec(buf_input,buf_output,power);
+	`protected
+
+    MTI!#XBpHF1lu5:CC#+zs1!}H]zNr5?[Mlj7i|K*s[ci}PY9DQK~]3ETz?}HN7Twu=K+QZO??@5}
+    i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input wire power;
+	input bit [msb:0]buf_input;
+	output bit [msb:0]buf_output;
+	assign buf_output = power ? buf_input : 'b0;
+endmodule
+
+// unpacked array
+module mspa_rs_buf_u_vec(buf_input,buf_output,power);
+	`protected
+
+    MTI!#w-7GX$AV!RO\H\sx*s@lV72[1nBaK16[yMW5iU[,P{>B=T[nBl@{u3-B[lTwu=K+QZO??@5
+    }i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input wire power;
+	input buf_input[msb:0];
+	output reg buf_output[msb:0];
+	for(genvar i=0;i<=msb;i=i+1)
+		assign buf_output[i] = power ? buf_input[i] : 1'bx;
+endmodule
+
+module mspa_rs_buf_u_2state_vec(buf_input,buf_output,power);
+	`protected
+
+    MTI!#[!2YjCos;Tz1z\Ds>1O?Vkl,iwXpy#eN"ls||,#1[zX=kusVU$,Aa;Bpi7Twu=K+QZO??@5
+    }i1HxR^!B3gpZ\i[3YvZ}n[M]EvnG_V_
+`endprotected
+	input wire power;
+	input bit buf_input[msb:0];
+	output bit buf_output[msb:0];
+	for(genvar i=0;i<=msb;i=i+1)
+		assign buf_output[i] = power ? buf_input[i] : 1'b0;
+endmodule
+
+module pa_upf_iso_supply_check (input enable, strtgy_pwr, input int pdid);
+import mspa_pack::*;
+
+/*===== PA UPF PG CHECK MODEL =====*/
+
+/* UPF Strategy Power Good check. Active on Power */
+(*UPF_PA_OBJ = "TRUE"*) always @( negedge strtgy_pwr)
+   QSPA_SUPPLY_PWR_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (enable == 1'b0) ) else $pa_messagelog(
+   "%:S (vsim-%:I) %:C: Time: %s, Power for Isolation strategy: '%s' of power domain: '%s' is switched OFF during isolation. 
+File: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8920",pdInfoTable[pdid].sPdName), "8920", "MSPA_UPF_PG_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,pdInfoTable[pdid].sPdName,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+
+/* UPF Strategy Power Good check. Active on CTRL */
+(*UPF_PA_OBJ = "TRUE"*) always @( enable )
+   QSPA_SUPPLY_CTRL_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (strtgy_pwr) ) else $pa_messagelog(
+   "%:S (vsim-%:I) %:C: Time: %s, Power for Isolation strategy: '%s' of power domain: '%s' is switched OFF during isolation. 
+File: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8920",pdInfoTable[pdid].sPdName), "8920", "MSPA_UPF_PG_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,pdInfoTable[pdid].sPdName,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+
+endmodule
+
+module pa_upf_ret_supply_check (input enable, strtgy_pwr, input int pdid);
+import mspa_pack::*;
+
+/*===== PA UPF PG CHECK MODEL =====*/
+
+/* UPF Strategy Power Good check. Active on Power */
+(*UPF_PA_OBJ = "TRUE"*) always @( negedge strtgy_pwr)
+   QSPA_SUPPLY_PWR_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (enable == 1'b0) ) else $pa_messagelog(
+   "%:S (vsim-%:I) %:C: Time: %s, Power for Retention strategy: '%s' of power domain: '%s' is switched OFF during retention. 
+File: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8920",pdInfoTable[pdid].sPdName), "8920", "MSPA_UPF_PG_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,pdInfoTable[pdid].sPdName,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+
+/* UPF Strategy Power Good check. Active on CTRL */
+(*UPF_PA_OBJ = "TRUE"*) always @( enable )
+   QSPA_SUPPLY_CTRL_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( (strtgy_pwr) ) else $pa_messagelog(
+   "%:S (vsim-%:I) %:C: Time: %s, Power for Retention strategy: '%s' of power domain: '%s' is switched OFF during retention. 
+File: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8920",pdInfoTable[pdid].sPdName), "8920", "MSPA_UPF_PG_CHK",$pa_pptime,pdInfoTable[pdid].sStrtgyName,pdInfoTable[pdid].sPdName,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+
+endmodule
+
+
+/*===== PA UPF PCS CHECK MODEL =====*/
+module pa_upf_control_check (input enable, srcsink_pg, input int portid, pdid);
+import mspa_pack::*;
+
+/*Control Signal corruption check.*/
+(*UPF_PA_OBJ = "TRUE"*) always @( enable )
+   QSPA_CTRL_CRPT_CHK : (*UPF_PA_OBJ = "TRUE"*) assert ( !(srcsink_pg && (^(enable) === 1'bx)) ) else $pa_messagelog(
+   "%:S (vsim-%:I) %:C: Time: %s, Control Signal '%s%s' is corrupted.(Current Value: %b) 
+File: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8901",pdInfoTable[pdid].sPdName), "8901", "MSPA_CTRL_SIG_CRPT",$pa_pptime,sPaPrefix,sSignalNames[portid],enable,pdInfoTable[pdid].sFileName,pdInfoTable[pdid].iLine,pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_ret_checks (input pwr, ret, set, reset,input int signalid,pdid);
+import mspa_pack::*;
+
+/*===== PA RET CHECK1 MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) always @(negedge  pwr)
+begin
+  if (ret !== 1'b1) begin 
+	 	QSPA_RET_OFF_PSO: (*UPF_PA_OBJ = "TRUE"*) assert ( set || reset ) else $pa_messagelog( 
+   		"%:S (vsim-%:I) %:C: Time: %s, Retention control (%b) for the following retention elements in scope '%s' of power domain '%s' is not asserted during power shut down:\n%s. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8903",pdInfoTable[pdid].sPdName), "8903", "MSPA_RET_OFF_PSO",$pa_pptime, ret, $pa_scope , pdInfoTable[pdid].sPdName, sSignalNames[signalid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+  end
+end
+
+/*===== PA RET CHECK2 MODEL =====*/
+(*UPF_PA_OBJ = "TRUE"*) always @(ret)
+begin
+  if (pwr !== 1'b1) begin 
+		QSPA_RET_PD_OFF: (*UPF_PA_OBJ = "TRUE"*) assert ( set || reset ) else $pa_messagelog( 
+  		"%:S (vsim-%:I) %:C: Time: %s, Power for domain: '%s' is not ON (%b) when retention is %s for retention elements in scope '%s':\n%s. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8904",pdInfoTable[pdid].sPdName), "8904", "MSPA_RET_PD_OFF",$pa_pptime, pdInfoTable[pdid].sPdName, pwr, ret ? "enabled" : "disabled", $pa_scope , sSignalNames[signalid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+  end
+end
+endmodule
+
+module pa_ret_checks_vec #(parameter size = 1)(input pwr, ret, input [0:size-1]set, reset,input int signalid,pdid);
+import mspa_pack::*;
+
+/*===== PA RET CHECK1 MODEL =====*/
+int i;
+(*UPF_PA_OBJ = "TRUE"*) always @(negedge  pwr)
+begin
+  if (ret !== 1'b1) begin 
+    for (i = 0; i < size; i=i+1) begin
+	 	QSPA_RET_OFF_PSO: (*UPF_PA_OBJ = "TRUE"*) assert ( set[i] || reset[i] ) else $pa_messagelog( 
+   		"%:S (vsim-%:I) %:C: Time: %s, Retention control (%b) for the following retention elements in scope '%s' of power domain '%s' is not asserted during power shut down:\n%s. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8903",pdInfoTable[pdid].sPdName), "8903", "MSPA_RET_OFF_PSO",$pa_pptime, ret, $pa_scope , pdInfoTable[pdid].sPdName, sSignalNames[signalid+i], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+    end
+  end
+end
+
+/*===== PA RET CHECK2 MODEL =====*/
+int j;
+(*UPF_PA_OBJ = "TRUE"*) always @(ret)
+begin
+  if (pwr !== 1'b1) begin 
+    for (j = 0; j < size; j=j+1) begin
+		QSPA_RET_PD_OFF: (*UPF_PA_OBJ = "TRUE"*) assert ( set[j] || reset[j] ) else $pa_messagelog( 
+  		"%:S (vsim-%:I) %:C: Time: %s, Power for domain: '%s' is not ON (%b) when retention is %s for retention elements in scope '%s':\n%s. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8904",pdInfoTable[pdid].sPdName), "8904", "MSPA_RET_PD_OFF",$pa_pptime, pdInfoTable[pdid].sPdName, pwr, ret ? "enabled" : "disabled", $pa_scope , sSignalNames[signalid+j], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+    end
+  end
+end
+endmodule
+
+module pa_set_rst_check (input pwr, ret, set, reset,input int signalid,pdid);
+import mspa_pack::*;
+(*UPF_PA_OBJ = "TRUE"*) always @(posedge pwr)
+begin
+	QSPA_NRET_ASYNCFF: (*UPF_PA_OBJ = "TRUE"*) assert ( ((set) === '1) || ((reset) === '1) ) else $pa_messagelog( 
+  		"%:S (vsim-%:I) %:C: Time: %s,  Asynchronous(set/reset) control for the following flop(s) in scope '%s' of power domain '%s' is not asserted at power up:\n%s. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8912",pdInfoTable[pdid].sPdName), "8912", "MSPA_NRET_ASYNCFF",$pa_pptime, $pa_scope, pdInfoTable[pdid].sPdName, sSignalNames[signalid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+endmodule
+
+module pa_set_rst_check_vec #(parameter size = 1)(input pwr, ret, input [0:size-1]set, reset,input int signalid,pdid);
+import mspa_pack::*;
+int i;
+(*UPF_PA_OBJ = "TRUE"*) always @(posedge pwr)
+begin
+  for (i = 0; i < size; i=i+1) begin
+		QSPA_NRET_ASYNCFF: (*UPF_PA_OBJ = "TRUE"*) assert ( ((set[i]) === '1) || ((reset[i]) === '1) ) else $pa_messagelog( 
+  		"%:S (vsim-%:I) %:C: Time: %s,  Asynchronous(set/reset) control for the following flop(s) in scope '%s' of power domain '%s' is not asserted at power up:\n%s. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8912",pdInfoTable[pdid].sPdName), "8912", "MSPA_NRET_ASYNCFF",$pa_pptime, $pa_scope, pdInfoTable[pdid].sPdName, sSignalNames[signalid+i], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+  end
+end
+endmodule
+
+module pa_ret_check3_latch_high (input ret,clk,input int signalid,pdid);
+import mspa_pack::*;
+(*UPF_PA_OBJ = "TRUE"*) always @(ret)
+	QSPA_RET_CLK_STATE: (*UPF_PA_OBJ = "TRUE"*) assert ( clk === 1'b0) else $pa_messagelog( 
+  		"%:S (vsim-%:I) %:C: Time: %s, LatchEn is not at proper level: 'HIGH' (%b) for the retention element(s) in scope '%s' of type: %s of power domain: %s.\n%s. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8905",pdInfoTable[pdid].sPdName), "8905", "MSPA_RET_CLK_STATE",$pa_pptime, clk, $pa_scope, sSignalNames[signalid+1],pdInfoTable[pdid].sPdName, sSignalNames[signalid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_ret_check3_latch_low (input ret,clk,input int signalid,pdid);
+import mspa_pack::*;
+(*UPF_PA_OBJ = "TRUE"*) always @(ret)
+	QSPA_RET_CLK_STATE: (*UPF_PA_OBJ = "TRUE"*) assert ( clk === 1'b0) else $pa_messagelog( 
+  		"%:S (vsim-%:I) %:C: Time: %s, LatchEn is not at proper level: 'LOW' (%b) for the retention element(s) in scope '%s' of type: %s of power domain: %s.\n%s. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8905",pdInfoTable[pdid].sPdName), "8905", "MSPA_RET_CLK_STATE",$pa_pptime, clk, $pa_scope, sSignalNames[signalid+1],pdInfoTable[pdid].sPdName, sSignalNames[signalid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_ret_check3_clk_high (input ret,clk,input int signalid,pdid);
+import mspa_pack::*;
+(*UPF_PA_OBJ = "TRUE"*) always @(ret)
+	QSPA_RET_CLK_STATE: (*UPF_PA_OBJ = "TRUE"*) assert ( clk === 1'b1) else $pa_messagelog( 
+  		"%:S (vsim-%:I) %:C: Time: %s, Clock is not at proper level: 'HIGH' (%b) for the retention element(s) in scope '%s' of type: %s of power domain: %s.\n%s. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8905",pdInfoTable[pdid].sPdName), "8905", "MSPA_RET_CLK_STATE",$pa_pptime, clk, $pa_scope, sSignalNames[signalid+1],pdInfoTable[pdid].sPdName, sSignalNames[signalid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_ret_check3_clk_low (input ret,clk,input int signalid,pdid);
+import mspa_pack::*;
+(*UPF_PA_OBJ = "TRUE"*) always @(ret)
+	QSPA_RET_CLK_STATE: (*UPF_PA_OBJ = "TRUE"*) assert ( clk === 1'b0) else $pa_messagelog( 
+  		"%:S (vsim-%:I) %:C: Time: %s, Clock is not at proper level: 'LOW' (%b) for the retention element(s) in scope '%s' of type: %s of power domain: %s.\n%s. \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8905",pdInfoTable[pdid].sPdName), "8905", "MSPA_RET_CLK_STATE",$pa_pptime, clk, $pa_scope, sSignalNames[signalid+1],pdInfoTable[pdid].sPdName, sSignalNames[signalid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_ret_check4_clk (input clk,ret,retedge,input int signalid,pdid);
+import mspa_pack::*;
+always @(clk)
+		QSPA_RET_SEQ_ACT: (*UPF_PA_OBJ = "TRUE"*) assert (  (retedge === 1'b1) || (ret !== 1'b1) ) else $pa_messagelog( 
+  		"%:S (vsim-%:I) %:C: Time: %s,  clock toggled  during retention period for retention element(s) in scope '%s':\n%s \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8906",pdInfoTable[pdid].sPdName), "8906", "MSPA_RET_SEQ_ACT",$pa_pptime, $pa_scope, sSignalNames[signalid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_ret_check4_latch (input clk,ret,retedge,input int signalid,pdid);
+import mspa_pack::*;
+always @(clk)
+		QSPA_RET_SEQ_ACT: (*UPF_PA_OBJ = "TRUE"*) assert (  (retedge === 1'b1) || (ret !== 1'b1) ) else $pa_messagelog( 
+  		"%:S (vsim-%:I) %:C: Time: %s,  latch enable toggled  during retention period for retention element(s) in scope '%s':\n%s \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8906",pdInfoTable[pdid].sPdName), "8906", "MSPA_RET_SEQ_ACT",$pa_pptime, $pa_scope, sSignalNames[signalid], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+endmodule
+
+module pa_ret_check4_clk_vec #(parameter size = 1) (input [0:size-1] clk,input ret,retedge,input int signalid,pdid);
+import mspa_pack::*;
+genvar i;
+generate;
+for (i = 0; i < size; i=i+1) begin : qspa_ret_check
+  always @(clk[i])
+		QSPA_RET_SEQ_ACT: (*UPF_PA_OBJ = "TRUE"*) assert (  (retedge === 1'b1) || (ret !== 1'b1) ) else $pa_messagelog( 
+  		"%:S (vsim-%:I) %:C: Time: %s,  clock toggled  during retention period for retention element(s) in scope '%s':\n%s \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8906",pdInfoTable[pdid].sPdName), "8906", "MSPA_RET_SEQ_ACT",$pa_pptime, $pa_scope, sSignalNames[signalid + i], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+endgenerate
+endmodule
+
+module pa_ret_check4_latch_vec #(parameter size = 1) (input [0:size-1] clk,input ret,retedge,input int signalid,pdid);
+import mspa_pack::*;
+genvar i;
+generate;
+for (i = 0; i < size; i=i+1) begin : qspa_ret_check
+  always @(clk[i])
+		QSPA_RET_SEQ_ACT: (*UPF_PA_OBJ = "TRUE"*) assert (  (retedge === 1'b1) || (ret !== 1'b1) ) else $pa_messagelog( 
+  		"%:S (vsim-%:I) %:C: Time: %s,  latch enable toggled  during retention period for retention element(s) in scope '%s':\n%s \nFile: %:F, Line: %0d, Power Domain:%:R", $pa_get_svrt("Error","8906",pdInfoTable[pdid].sPdName), "8906", "MSPA_RET_SEQ_ACT",$pa_pptime, $pa_scope, sSignalNames[signalid + i], pdInfoTable[pdid].sFileName, pdInfoTable[pdid].iLine, pdInfoTable[pdid].sPdName);
+end
+endgenerate
+endmodule
+

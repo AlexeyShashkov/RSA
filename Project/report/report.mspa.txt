@@ -1,0 +1,167 @@
+---------------------------------------------
+----- QuestaSim Power Aware Report File -----
+---------------------------------------------
+
+
+Total  ( rsa_top_tb  )
+
+ NPM_FF # 352
+
+ NPM_LA # 1
+
+ OUTPUT # 446
+-----------------------------
+
+PD_sw sub_total ( /rsa_top_tb/dut/mod_exp_0 /rsa_top_tb/dut/mod_exp_0/mod_exp_0 /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0 /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0 /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/bit_comp_0 /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/bit_shift_adder_final /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0 /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0 /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0/csa_2 /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0/csa_2 /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0/csa_1 /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0/csa_1 /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0/csa_0 /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0/csa_0 /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/bit_shift_adder_0 /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/bit_shift_adder_0 /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/counter_0 /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/counter_0 /rsa_top_tb/dut/mod_exp_0/mod_exp_0/counter_to_t_sub_1_0  )
+
+ NPM_FF # 311
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/r_ready 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/r_n[8:0] 9
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/r_r2_mod_n[8:0] 9
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/r_t_sub_1[3:0] 4
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/r_c[8:0] 9
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/r_d[8:0] 9
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/d2_start_final_addition 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/d1_start_final_addition 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/r_n_prev[8:0] 9
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/r_set_ready 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/r_start_final_addition 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/r_inc 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/r_start_p 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/r_start_r 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/r_commutation_config[1:0] 2
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/r_s0 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/r_s6 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/r_s5 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/r_s4 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/r_s3 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/r_s2 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/r_s1 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/cnt_addition_continue 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/cnt_addition[3:0] 4
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/final_sum[8:0] 9
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/addition_done 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/r_done 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/r_m_out[8:0] 9
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/bit_comp_0/r_in1[8:0] 9
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/bit_comp_0/r_in0[8:0] 9
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/bit_comp_0/r_done_cmp 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/bit_comp_0/r_are_equal 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/bit_comp_0/is_working 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/bit_comp_0/cnt[3:0] 4
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/bit_shift_adder_final/r_c 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/bit_shift_adder_final/r_a1[8:0] 9
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/bit_shift_adder_final/r_a0[8:0] 9
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/r_n[10:0] 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/r_b1[10:0] 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/r_b0[10:0] 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/r_n[10:0] 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/r_b1[10:0] 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/r_b0[10:0] 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0/r_s1[10:0] 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0/r_s0[10:0] 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0/r_s1[10:0] 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0/r_s0[10:0] 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/bit_shift_adder_0/r_c 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/bit_shift_adder_0/r_a1[10:0] 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/bit_shift_adder_0/r_a0[10:0] 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/bit_shift_adder_0/r_c 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/bit_shift_adder_0/r_a1[10:0] 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/bit_shift_adder_0/r_a0[10:0] 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/counter_0/r_active 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/counter_0/cnt[3:0] 4
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/counter_0/r_ready_next 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/counter_0/r_ready_next_prev 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/counter_0/r_ready_next_3prev 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/counter_0/r_active 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/counter_0/cnt[3:0] 4
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/counter_0/r_ready_next 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/counter_0/r_ready_next_prev 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/counter_0/r_ready_next_3prev 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/counter_to_t_sub_1_0/cnt[3:0] 4
+
+ OUTPUT # 396
+  /rsa_top_tb/dut/mod_exp_0/w0_done 1
+  /rsa_top_tb/dut/mod_exp_0/w0_m 9
+  /rsa_top_tb/dut/mod_exp_0/w0_ready 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/b1_p 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/b0_p 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/a1_p 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/a0_p 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/b1_r 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/b0_r 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/a1_r 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/a0_r 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/w_start_p 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/w_start_r 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/w_commutation_config 2
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/w_inc 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/w_start_final_addition 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/control_0/w_set_ready 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/m_out 9
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/bit_comp_0/bits_are_equal 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/final_adder_0/bit_shift_adder_final/fa 2
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/b1_ai 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/b0_ai 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/q_i 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/n_qi 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/b1_ai 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/b0_ai 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/q_i 1
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/n_qi 11
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0/csa_1_x4 12
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0/csa_2_x5 13
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0/csa_1_x4 12
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0/csa_2_x5 13
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0/csa_2/s 14
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0/csa_2/c 14
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0/csa_2/s 14
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0/csa_2/c 14
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0/csa_1/s 13
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0/csa_1/c 13
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0/csa_1/s 13
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0/csa_1/c 13
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0/csa_0/s 12
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/csa_5_to_2_div_2_0/csa_0/c 12
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0/csa_0/s 12
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/csa_5_to_2_div_2_0/csa_0/c 12
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_r/bit_shift_adder_0/fa 2
+  /rsa_top_tb/dut/mod_exp_0/mod_exp_0/mont_mult_p/bit_shift_adder_0/fa 2
+-----------------------------
+
+PD_top sub_total ( /rsa_top_tb/dut /rsa_top_tb/dut/rsa_power_control_0  )
+
+ NPM_FF # 41
+  /rsa_top_tb/dut/d2_w_sw_ack 1
+  /rsa_top_tb/dut/d1_w_sw_ack 1
+  /rsa_top_tb/dut/power_enabled 1
+  /rsa_top_tb/dut/rsa_power_control_0/present_state[31:0] 32
+  /rsa_top_tb/dut/rsa_power_control_0/r_clk_disable 1
+  /rsa_top_tb/dut/rsa_power_control_0/r_reset_on_enable 1
+  /rsa_top_tb/dut/rsa_power_control_0/r_sw_disable 1
+  /rsa_top_tb/dut/rsa_power_control_0/r_mode_change_ack 1
+  /rsa_top_tb/dut/rsa_power_control_0/r_iso_en 1
+  /rsa_top_tb/dut/rsa_power_control_0/r_outputs_force_zero 1
+
+ NPM_LA # 1
+  /rsa_top_tb/dut/clk_enable_latch 1
+
+ OUTPUT # 50
+  /rsa_top_tb/dut/clk_gated 1
+  /rsa_top_tb/dut/w2_done 1
+  /rsa_top_tb/dut/w2_m 9
+  /rsa_top_tb/dut/w2_ready 1
+  /rsa_top_tb/dut/rsa_power_control_0/next_state 32
+  /rsa_top_tb/dut/rsa_power_control_0/w_mode_change_ack 1
+  /rsa_top_tb/dut/rsa_power_control_0/w_reset_on_enable 1
+  /rsa_top_tb/dut/rsa_power_control_0/w_iso_en 1
+  /rsa_top_tb/dut/rsa_power_control_0/w_outputs_force_zero 1
+  /rsa_top_tb/dut/rsa_power_control_0/w_sw_disable 1
+  /rsa_top_tb/dut/rsa_power_control_0/w_clk_disable 1
+-----------------------------
+
+-- NPM_FF => Denotes all Non Power Management Flip Flops of a Power Domain.
+-- NPM_LA => Denotes all Non Power Management Latches of a Power Domain.
+-- UDP_FF => Denotes all the Sequential UDPs inferred as flop of a Power Domain.
+-- UDP_LA => Denotes all the Sequential UDPs inferred as latch of a Power Domain.
+-- OUTPUT => Denotes all outputs and power signals,which are not sequential elements, of a Power Domain.

@@ -1,0 +1,65 @@
+-----------------------------------------------------------
+----- QuestaSim Power Aware Static Checks Report File -----
+-----------------------------------------------------------
+ -- QuestaSim Version :    10.2c 2013.07
+-- Generated on     :     Tue Feb 23 11:12:53 2016
+-----------------------------------------------------------
+-- This is the static report of analysis done for the signals crossing power domains.
+-- This includes the structural correctness of isolation/level shifter cells and  
+-- validity of power domain crossings in absence of these cells.
+--
+-- This report is structured into two sections
+-- a) Domain-wise reporting
+--     This section contains information about different isolation/level
+--     shifter cells present between two domains.
+-- b) Strategy-wise reporting
+--     This section lists the same information present in domain-wise
+--     reporting in the way strategy is reported in other PA reports. This
+--     provides easy correlation between information about static checks and
+--     power intent.
+--
+-- Note: Presence of "--" in domain name field indicates that the
+-- corresponding object doesn't belong to any specified power domain.
+-----------------------------------------------------------
+
++------------------------------+
+|      Domain wise report      |
++------------------------------+
+
++----------------------------------------------+
+|      Level shifter strategy wise report      |
++----------------------------------------------+
++----------------------------------------+
+|      Domain wise Isolation report      |
++----------------------------------------+
+------------------------------
+Total 11 Valid isolation cells.
+	Source power domain : PD_sw -> Sink power domain: PD_top [ Total count: 11 ]
+		1. ISO( count: 1 ): Candidate Port: /rsa_top_tb/dut/mod_exp_0/done [ connected mask: "1" ], count:1, Isolation strategy : pd_sw_iso, Domain: PD_sw, 
+			Source port: /rsa_top_tb/dut/mod_exp_0/done [ connected mask: "1" ], count:1 [ LowConn ] -> Sink port: /rsa_top_tb/dut/mod_exp_0/done [ connected mask: "1" ], count:1 [ HighConn ]
+				Possible reason:'Isolation is required and is present from (PD_sw) => (PD_top)'
+		2. ISO( count: 9 ): Candidate Port: /rsa_top_tb/dut/mod_exp_0/m [ connected mask: "111111111" ], count:9, Isolation strategy : pd_sw_iso, Domain: PD_sw, 
+			Source port: /rsa_top_tb/dut/mod_exp_0/m [ connected mask: "111111111" ], count:9 [ LowConn ] -> Sink port: /rsa_top_tb/dut/mod_exp_0/m [ connected mask: "111111111" ], count:9 [ HighConn ]
+				Possible reason:'Isolation is required and is present from (PD_sw) => (PD_top)'
+		3. ISO( count: 1 ): Candidate Port: /rsa_top_tb/dut/mod_exp_0/ready [ connected mask: "1" ], count:1, Isolation strategy : pd_sw_iso, Domain: PD_sw, 
+			Source port: /rsa_top_tb/dut/mod_exp_0/ready [ connected mask: "1" ], count:1 [ LowConn ] -> Sink port: /rsa_top_tb/dut/mod_exp_0/ready [ connected mask: "1" ], count:1 [ HighConn ]
+				Possible reason:'Isolation is required and is present from (PD_sw) => (PD_top)'
+	
+
++------------------------------------------+
+|      Isolation strategy wise report      |
++------------------------------------------+
+Total 11 Valid isolation cells
+
+Isolation cells:
+
+	Isolation strategy: pd_sw_iso, Domain: PD_sw
+		1. Candidate port: /rsa_top_tb/dut/mod_exp_0/done [ count: 1 ]
+			Inferred type:'Valid'[ count: 1 ], Source port : /rsa_top_tb/dut/mod_exp_0/done [ connected mask: "1" ] [ LowConn ] { Domain: PD_sw } -> Sink port: /rsa_top_tb/dut/mod_exp_0/done [ connected mask: "1" ] [ HighConn ] { Domain: PD_top }
+				Possible reason:'Isolation is required and is present from (PD_sw) => (PD_top)'
+		2. Candidate port: /rsa_top_tb/dut/mod_exp_0/m [ count: 9 ]
+			Inferred type:'Valid'[ count: 9 ], Source port : /rsa_top_tb/dut/mod_exp_0/m [ connected mask: "111111111" ] [ LowConn ] { Domain: PD_sw } -> Sink port: /rsa_top_tb/dut/mod_exp_0/m [ connected mask: "111111111" ] [ HighConn ] { Domain: PD_top }
+				Possible reason:'Isolation is required and is present from (PD_sw) => (PD_top)'
+		3. Candidate port: /rsa_top_tb/dut/mod_exp_0/ready [ count: 1 ]
+			Inferred type:'Valid'[ count: 1 ], Source port : /rsa_top_tb/dut/mod_exp_0/ready [ connected mask: "1" ] [ LowConn ] { Domain: PD_sw } -> Sink port: /rsa_top_tb/dut/mod_exp_0/ready [ connected mask: "1" ] [ HighConn ] { Domain: PD_top }
+				Possible reason:'Isolation is required and is present from (PD_sw) => (PD_top)'
